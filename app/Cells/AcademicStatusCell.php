@@ -18,13 +18,15 @@ class AcademicStatusCell extends Cell
         } else {
             $this->color = "badge bg-danger";
         }
+
+        cache()->save("cache_academic_status_cell", $this->status, 86400);
     }
 
     public function getStatusProperty()
     {
         return $this->status;
     }
-    
+
     public function getColorProperty()
     {
         return $this->color;

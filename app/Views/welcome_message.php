@@ -1,6 +1,6 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<?= view_cell("AcademicStatusCell", ["status"=> "Active"]) ?>
+<h1>WELCOME TO SIMPLE STUDENT MANAGEMENT SYSTEM</h1>
 
 <?= $this->endSection() ?>

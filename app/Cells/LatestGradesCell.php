@@ -17,6 +17,8 @@ class LatestGradesCell extends Cell
         } else {
             $this->latestCourse = $this->course;
         }
+
+        cache()->save("cache_latest_grades_cell", $this->latestCourse, 86400);
     }
 
     public function getCourseProperty()
