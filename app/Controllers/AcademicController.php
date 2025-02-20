@@ -33,6 +33,8 @@ class AcademicController extends BaseController
         $data['academics'] = count($this->academicModel->getAcademics());
         $data['students'] = count($this->studentModel->getStudents());
 
+        cache()->save("cache_academics_statistic_cell", $data, 86400);
+
         return view('academics/v_academics_statistic', $data);
     }
 }
