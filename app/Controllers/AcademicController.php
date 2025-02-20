@@ -22,7 +22,7 @@ class AcademicController extends BaseController
         $data['academics'] = $this->academicModel->getAcademicArray();
 
         $data['content'] = $parser->setData($data)
-            ->render("academics/v_course_list", ['cache' => DAY, 'cache_name' => 'course_list']);
+            ->render("academics/v_course_list", ['cache' => 86400, 'cache_name' => 'course_list']);
 
 
         return view("components/v_parser_layout", $data);
@@ -33,7 +33,7 @@ class AcademicController extends BaseController
         $data['academics'] = count($this->academicModel->getAcademics());
         $data['students'] = count($this->studentModel->getStudents());
 
-        cache()->save("cache_academics_statistic_cell", $data, HOUR);
+        cache()->save("cache_academics_statistic_cell", $data, 3600);
 
         return view('academics/v_academics_statistic', $data);
     }
