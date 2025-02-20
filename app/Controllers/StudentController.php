@@ -28,7 +28,7 @@ class StudentController extends BaseController
         $data = ['students' => $students];
 
         $data['content'] = $parser->setData($data)
-            ->render("students/v_student_list", ['cache' => HOUR, 'cache_name' => 'student_list']);
+            ->render("students/v_student_list", ['cache' => 1800, 'cache_name' => 'student_list']);
 
         return view('components/v_parser_layout', $data);
     }
@@ -47,7 +47,7 @@ class StudentController extends BaseController
         // print_r($students);
 
         $data['content'] = $parser->setData($data)
-            ->render("students/v_student_profile", ['cache' => '1', 'cache_name' => 'student_profile']);
+            ->render("students/v_student_profile", ['cache' => HOURS, 'cache_name' => 'student_profile']);
 
         return view('components/v_parser_layout', $data);
     }
