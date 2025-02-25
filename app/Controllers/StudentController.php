@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Entities\StudentDb;
 use App\Models\MStudent;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -18,17 +19,26 @@ class StudentController extends BaseController
     public function index()
     {
         $parser = \Config\Services::parser();
-        $students = $this->studentModel->getStudentsArray();
+        $students = $this->studentModel->findAll(); // Returns an array of entity objects
 
-        foreach ($students as &$student) {
-            $student['status_cell'] = view_cell('AcademicStatusCell', ['status' => $student['status']]);
-            $student['grade_cell'] = view_cell('LatestGradesCell', ['course' => $student['courses'], 'filter' => true]);
+        $studentsArray = []; // New array for parsed data
+
+        foreach ($students as $student) {
+            $studentData = $student->toArray(); // Convert entity to array
+            $studentData['status_cell'] = view_cell('AcademicStatusCell', ['status' => $student->academic_status]);
+            $studentsArray[] = $studentData;
         }
 
-        $data = ['students' => $students];
+        $data = ['students' => $studentsArray];
+
+        print_r($students);
+
 
         $data['content'] = $parser->setData($data)
-            ->render("students/v_student_list", ['cache' => 1800, 'cache_name' => 'student_list']);
+            ->render(
+                "students/v_student_list",
+                // ['cache' => 1800, 'cache_name' => 'student_list']
+            );
 
         return view('components/v_parser_layout', $data);
     }

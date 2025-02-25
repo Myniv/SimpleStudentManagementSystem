@@ -6,49 +6,46 @@ use App\Entities\Student;
 use CodeIgniter\Model;
 use App\Models\MAcademic; // Import MAcademic
 
-class MStudent
+class MStudent extends Model
 {
-    private $students = [];
-    private $academics = [];
+    protected $table = 'students';
+    protected $primaryKey = 'id';
+    protected $useAutoIncrement = true;
+    // protected $returnType = 'array';
+    protected $returnType = \App\Entities\Student::class;
+    protected $useSoftDeletes = false;
+    protected $protectFields = true;
+    protected $allowedFields = ["student_id", "name", "study_program", "current_semester", "academic_status", "entry_year", "gpa"];
 
-    public function __construct()
-    {
-        $academicModel = new MAcademic();
-        $this->academics = $academicModel->getAcademics();
+    protected bool $allowEmptyInserts = false;
+    protected bool $updateOnlyChanged = true;
 
-        $this->students[] = $this->createStudent(1, 'John Cena', 'Computer Science', 4, "Active", [
-            ['academic' => $this->academics[0], 'grade' => 85],
-            ['academic' => $this->academics[2], 'grade' => 78],
-            ['academic' => $this->academics[3], 'grade' => 90],
-            ['academic' => $this->academics[1], 'grade' => 35],
-            ['academic' => $this->academics[5], 'grade' => 78],
-            ['academic' => $this->academics[4], 'grade' => 55],
-        ]);
+    protected array $casts = [];
+    protected array $castHandlers = [];
 
-        $this->students[] = $this->createStudent(2, 'Rey Misterio', 'Information Technology', 3, "On Leave", [
-            ['academic' => $this->academics[1], 'grade' => 88],
-            ['academic' => $this->academics[3], 'grade' => 92],
-            ['academic' => $this->academics[5], 'grade' => 80],
-            ['academic' => $this->academics[2], 'grade' => 85],
-            ['academic' => $this->academics[6], 'grade' => 83],
-            ['academic' => $this->academics[4], 'grade' => 54],
-            ['academic' => $this->academics[0], 'grade' => 98],
-            ['academic' => $this->academics[7], 'grade' => 65],
-        ]);
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat = 'datetime';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
+    protected $deletedField = 'deleted_at';
 
-        $this->students[] = $this->createStudent(3, 'Dwayne Johnson', 'Cyber Security', 2, "Graduated", [
-            ['academic' => $this->academics[4], 'grade' => 75],
-            ['academic' => $this->academics[1], 'grade' => 82],
-            ['academic' => $this->academics[9], 'grade' => 70],
-            ['academic' => $this->academics[5], 'grade' => 50],
-            ['academic' => $this->academics[3], 'grade' => 77],
-            ['academic' => $this->academics[2], 'grade' => 94],
-            ['academic' => $this->academics[6], 'grade' => 65],
-            ['academic' => $this->academics[8], 'grade' => 87],
-            ['academic' => $this->academics[7], 'grade' => 66],
-            ['academic' => $this->academics[0], 'grade' => 93],
-        ]);
-    }
+    // Validation
+    protected $validationRules = [];
+    protected $validationMessages = [];
+    protected $skipValidation = false;
+    protected $cleanValidationRules = true;
+
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert = [];
+    protected $afterInsert = [];
+    protected $beforeUpdate = [];
+    protected $afterUpdate = [];
+    protected $beforeFind = [];
+    protected $afterFind = [];
+    protected $beforeDelete = [];
+    protected $afterDelete = [];
 
     private function createStudent($id, $name, $program, $semester, $status, $courses, )
     {

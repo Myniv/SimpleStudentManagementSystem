@@ -18,12 +18,13 @@
         <tr>
             <td>{id}</td>
             <td>{name}</td>
-            <td>{program}</td>
-            <td>{semester}</td>
+            <td>{study_program}</td>
+            <td>{current_semester}</td>
             <td>{gpa}</td>
 
             {# the {! variable !} make the raw to html so can show up the bootstrap class from cell too #}
             <td class="text-center">{!status_cell!}</td>
+            <!-- <td class="text-center">{academic_status}</td> -->
             <td>
                 <ul class="list-unstyled mb-0">
                     {!grade_cell!}

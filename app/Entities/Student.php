@@ -4,54 +4,25 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-class Student 
+class Student extends Entity
 {
-    private $id;
-    private $name;
-    private $program;
-    private $course = [];
-    private $semester;
-    private $gpa;
-    private $status;
+    protected $attributes = [
+        "id"=> null,
+        "student_id" => null,
+        "name" => null,
+        "study_program" => null,
+        "current_semester"=>null,
+        "academic_status"=>null,
+        "entry_year"=>null,
+        "gpa"=>null,
+        "created_at" => null,
+        "updated_at"=> null,
+    ];
 
-    public function __construct($id, $name, $program, array $course, $semester, $gpa, $status)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->program = $program;
-        $this->course = $course;
-        $this->semester = $semester;
-        $this->gpa = $gpa;
-        $this->status = $status;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-    public function getName()
-    {
-        return $this->name;
-    }
-    public function getProgram()
-    {
-        return $this->program;
-    }
-    public function getCourse()
-    {
-        return $this->course;
-    }
-    public function getSemester()
-    {
-        return $this->semester;
-    }
-    public function getGpa()
-    {
-        return $this->gpa;
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
+    protected $casts = [
+        'id' => 'integer',
+        'student_id' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 }
