@@ -1,5 +1,6 @@
 <h2 class="text-center my-4">Student List</h2>
 
+<a href="/students/create">Add Student</a>
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
         <tr>
@@ -36,7 +37,15 @@
                 </ul>
             </td>
             <td>
-                <button class="btn btn-primary" onclick="window.location.href='students/show/{id}'">Detail</button>
+                <button class="btn btn-primary btn-sm" onclick="window.location.href='students/show/{id}'">Detail</button>
+                <button class="btn btn-success btn-sm" onclick="window.location.href='students/update/{id}'">Edit</button>
+                <form action="/students/delete/{id}" method="post" class="d-inline">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Are you sure want to delete this student?');">
+                        Delete
+                    </button>
+                </form>
             </td>
         </tr>
         {/students}

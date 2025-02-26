@@ -31,8 +31,51 @@ class MStudent extends Model
     protected $deletedField = 'deleted_at';
 
     // Validation
-    protected $validationRules = [];
-    protected $validationMessages = [];
+    protected $validationRules = [
+        //is unique column: is_unique[table_name.column_name,primary_key_column,ignore_value]
+        'student_id' => 'required|is_unique[students.student_id,id,{id}]',
+        'name' => 'required|min_length[3]|max_length[100]',
+        'study_program' => 'required',
+        'current_semester' => 'required|integer|greater_than_equal_to[1]|less_than_equal_to[14]',
+        'academic_status' => 'required|in_list[Active,On Leave,Graduated]',
+        'entry_year' => 'required|integer|exact_length[4]',
+        'gpa' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[4.00]',
+    ];
+    protected $validationMessages = [
+        'student_id' => [
+            'required' => 'Student ID is required.',
+            'is_unique' => 'Student ID must be unique.',
+        ],
+        'name' => [
+            'required' => 'Student name is required.',
+            'min_length' => 'Name must be at least 3 characters.',
+            'max_length' => 'Name must not exceed 100 characters.',
+        ],
+        'study_program' => [
+            'required' => 'Study program is required.',
+        ],
+        'current_semester' => [
+            'required' => 'Current semester is required.',
+            'integer' => 'Semester must be a number.',
+            'greater_than_equal_to' => 'Semester must be at least 1.',
+            'less_than_equal_to' => 'Semester must not be more than 14.',
+        ],
+        'academic_status' => [
+            'required' => 'Academic status is required.',
+            'in_list' => 'Academic status must be one of: active, on leave, or graduated.',
+        ],
+        'entry_year' => [
+            'required' => 'Entry year is required.',
+            'integer' => 'Entry year must be a valid number.',
+            'exact_length' => 'Entry year must be exactly 4 digits.',
+        ],
+        'gpa' => [
+            'required' => 'GPA is required.',
+            'decimal' => 'GPA must be a decimal number.',
+            'greater_than_equal_to' => 'GPA cannot be less than 0.',
+            'less_than_equal_to' => 'GPA cannot be greater than 4.00.',
+        ],
+    ];
     protected $skipValidation = false;
     protected $cleanValidationRules = true;
 
@@ -47,64 +90,6 @@ class MStudent extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
-    private function createStudent($id, $name, $program, $semester, $status, $courses, )
-    {
-        return new Student(
-            $id,
-            $name,
-            $program,
-            $courses,
-            $semester,
-            $this->calculateGPA($courses),
-            $status,
-        );
-    }
-
-    public function getStudents()
-    {
-        return $this->students;
-    }
-    public function getStudentsArray()
-    {
-        $studentArray = [];
-        foreach ($this->students as $student) {
-            $studentArray[] = [
-                'id' => $student->getId(),
-                'name' => $student->getName(),
-                'program' => $student->getProgram(),
-                'semester' => $student->getSemester(),
-                'gpa' => number_format($student->getGpa(), 2),
-                'courses' => $this->formatCourseToArray($student->getCourse(), false),
-                'status' => $student->getStatus(),
-            ];
-        }
-
-        return $studentArray;
-    }
-
-    public function getStudentById($id)
-    {
-        return $this->students[$id];
-    }
-
-    public function getStudentByIdArray($id)
-    {
-        foreach ($this->students as $student) {
-            if ($student->getId() == $id) {
-                return [
-                    'id' => $student->getId(),
-                    'name' => $student->getName(),
-                    'program' => $student->getProgram(),
-                    'semester' => $student->getSemester(),
-                    'gpa' => number_format($student->getGpa(), 2),
-                    'courses' => $this->formatCourseToArray($student->getCourse(), false),
-                    'status' => $student->getStatus(),
-                ];
-            }
-        }
-
-        return "Student Not Found";
-    }
 
     private function calculateGPA($courses)
     {
@@ -131,24 +116,6 @@ class MStudent extends Model
         if ($averageGrade >= 50)
             return 2.0;
         return 1.0; // Below 50 is a failing grade
-    }
-
-    public function formatCourseToArray($courses, $filter)
-    {
-        $course = $courses;
-        if ($filter == true) {
-            $course = array_slice($courses, -5, 5, true);
-        }
-        $courseArray = [];
-
-        foreach ($course as $value) {
-            $courseArray[] = [
-                'course_id' => $value['academic']->getId(),
-                'course_name' => $value['academic']->getName(),
-                'course_grade' => $value['grade'],
-            ];
-        }
-        return $courseArray;
     }
 
 }

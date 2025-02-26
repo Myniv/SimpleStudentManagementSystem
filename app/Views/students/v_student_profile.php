@@ -6,7 +6,9 @@
                 style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #ddd;">
 
             <h4 class="card-title">{name}</h4>
-            <h6 class="text-muted">{program} - Semester {semester}</h6>
+            <h6 class="text-muted">{study_program} - Semester {current_semester}</h6>
+            <h6 class="text-muted">Entry Year : {entry_year}</h6>
+            <h6 class="text-muted">GPA : {gpa}</h6>
             {!status_cell!}
             <hr>
             <h5>Grades</h5>
