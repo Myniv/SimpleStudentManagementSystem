@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\AcademicController;
+use App\Controllers\CoursesController;
 use App\Controllers\StudentController;
 use CodeIgniter\Router\RouteCollection;
 
@@ -16,5 +17,10 @@ $routes->group('students', function (RouteCollection $routes) {
     $routes->delete('delete/(:num)', [StudentController::class, 'delete/$1']);
 });
 
-$routes->get('/academics', [AcademicController::class, 'index']);
-$routes->get('/academics/statistics', [AcademicController::class, 'academicStatistics']);
+$routes->group('courses', function (RouteCollection $routes) {
+    $routes->get('/', [CoursesController::class, 'index']);
+    $routes->match(['get', 'post'], 'create', [CoursesController::class, 'create']);
+    $routes->match(['get', 'put'], 'update/(:num)', [CoursesController::class, 'update']);
+    $routes->delete('delete/(:num)', [CoursesController::class, 'delete/$1']);
+    // $routes->get('/statistics', [AcademicController::class, 'academicStatistics']);
+});
