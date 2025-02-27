@@ -12,6 +12,7 @@
                     <a class="text-white" href="<?= base_url('/') ?>">Home</a>
                     <a class="text-white" href="<?= base_url('/courses') ?>">Courses</a>
                     <a class="text-white" href="<?= base_url('/students') ?>">Students</a>
+                    <a class="text-white" href="<?= base_url('/enrollments') ?>">Enrollments</a>
                 </nav>
             </div>
         </div>

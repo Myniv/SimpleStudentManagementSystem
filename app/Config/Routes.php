@@ -2,6 +2,7 @@
 
 use App\Controllers\AcademicController;
 use App\Controllers\CoursesController;
+use App\Controllers\EnrollmentController;
 use App\Controllers\StudentController;
 use CodeIgniter\Router\RouteCollection;
 
@@ -22,5 +23,11 @@ $routes->group('courses', function (RouteCollection $routes) {
     $routes->match(['get', 'post'], 'create', [CoursesController::class, 'create']);
     $routes->match(['get', 'put'], 'update/(:num)', [CoursesController::class, 'update']);
     $routes->delete('delete/(:num)', [CoursesController::class, 'delete/$1']);
-    // $routes->get('/statistics', [AcademicController::class, 'academicStatistics']);
+});
+
+$routes->group('enrollments', function (RouteCollection $routes) {
+    $routes->get('/', [EnrollmentController::class, 'index']);
+    $routes->match(['get', 'post'], 'create', [EnrollmentController::class, 'create']);
+    $routes->match(['get', 'put'], 'update/(:num)', [EnrollmentController::class, 'update']);
+    $routes->delete('delete/(:num)', [EnrollmentController::class, 'delete/$1']);
 });
