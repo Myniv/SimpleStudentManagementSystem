@@ -20,8 +20,8 @@
                     <input type="text" name="student_id"
                         class="form-control <?= session('errors.student_id') ? 'is-invalid' : '' ?>"
                         value="<?= old('student_id', isset($student) ? $student->student_id : '') ?>"
-                        data-pristine-required data-pristine-required-message="Student Id is required">
-                    <div class="invalid-feedback"><?= session('errors.student_id') ?? '' ?></div>
+                        data-pristine-required data-pristine-required-message="Student ID is required">
+                    <div class="text-danger"><?= session('errors.student_id') ?? '' ?></div>
                 </div>
 
                 <div class="mb-3">
@@ -33,7 +33,7 @@
                         data-pristine-minlength-message="Name must be at least 3 characters"
                         data-pristine-maxlength="100"
                         data-pristine-minlength-message="Name must not exceed 100 characters.">
-                    <div class="invalid-feedback"><?= session('errors.name') ?? '' ?></div>
+                    <div class="text-danger"><?= session('errors.name') ?? '' ?></div>
                 </div>
 
                 <div class="mb-3">
@@ -42,7 +42,7 @@
                         class="form-control <?= session('errors.study_program') ? 'is-invalid' : '' ?>"
                         value="<?= old('study_program', isset($student) ? $student->study_program : '') ?>"
                         data-pristine-required data-pristine-required-message="Study Program is required">
-                    <div class="invalid-feedback"><?= session('errors.study_program') ?? '' ?></div>
+                    <div class="text-danger"><?= session('errors.study_program') ?? '' ?></div>
                 </div>
 
                 <div class="mb-3">
@@ -53,7 +53,7 @@
                         data-pristine-required data-pristine-required-message="Current Semester is required"
                         data-pristine-min="1" data-pristine-min-message="Current Semester must be at least 1"
                         data-pristine-max="14" data-pristine-max-message="Current Semester must not exceed 14">
-                    <div class="invalid-feedback"><?= session('errors.current_semester') ?? '' ?></div>
+                    <div class="text-danger"><?= session('errors.current_semester') ?? '' ?></div>
                 </div>
 
                 <div class="mb-3">
@@ -66,7 +66,7 @@
                         <option value="On Leave" <?= old('academic_status', isset($student) ? $student->academic_status : '') == 'On Leave' ? 'selected' : '' ?>>On Leave</option>
                         <option value="Graduated" <?= old('academic_status', isset($student) ? $student->academic_status : '') == 'Graduated' ? 'selected' : '' ?>>Graduated</option>
                     </select>
-                    <div class="invalid-feedback"><?= session('errors.academic_status') ?? '' ?></div>
+                    <div class="text-danger"><?= session('errors.academic_status') ?? '' ?></div>
                 </div>
 
                 <div class="mb-3">
@@ -77,7 +77,7 @@
                         data-pristine-required data-pristine-required-message="Entry Year is required"
                         data-pristine-minlength="4" data-pristine-minlength-message="Entry Year must be at least 4"
                         data-pristine-maxlength="4" data-pristine-maxlength-message="Entry Year must be at least 4">
-                    <div class="invalid-feedback"><?= session('errors.entry_year') ?? '' ?></div>
+                    <div class="text-danger"><?= session('errors.entry_year') ?? '' ?></div>
                 </div>
 
                 <div class="mb-3">
@@ -88,7 +88,7 @@
                         data-pristine-min-message="GPA Cannot least than 0" data-pristine-type="decimal"
                         data-pristine-type-message="GPA must be a decimal number" data-pristine-max="4.00"
                         data-pristine-max-message="GPA cannot exceed 4.00">
-                    <div class="invalid-feedback"><?= session('errors.gpa') ?? '' ?></div>
+                    <div class="text-danger"><?= session('errors.gpa') ?? '' ?></div>
                 </div>
 
                 <button type="submit" class="btn btn-success">Save Student</button>
