@@ -41,6 +41,11 @@ class MCourses extends Model
             "is_unique" => "Course code must be unique.",
             "exact_length" => "Course code must be exactly 8 characters."
         ],
+        "name" => [
+            "required" => "Course name is required.",
+            "min_length" => "Course name must be at least 3 characters.",
+            "max_length" => "Course name must not exceed 100 characters.",
+        ],
         "credits" => [
             "required" => "Course credits are required.",
             "integer" => "Course credits must be a number.",
