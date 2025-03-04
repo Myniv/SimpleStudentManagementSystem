@@ -12,14 +12,17 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="<?php echo base_url('js/bootstrap.js') ?>"><</script>
+    <script src="<?= base_url('js/pristine/dist/pristine.js') ?>" type="text/javascript"></script>
 </head>
 <div class="d-flex flex-column min-vh-100">
     <?= $this->include('components/header') ?>
     <div class="flex-grow-1">
         <div class="container mt-4">
-                <?= $this->include('components/sidebar') ?>
+            <?= $this->include('components/sidebar') ?>
             <?= $this->renderSection('content') ?>
         </div>
     </div>
     <?= $this->include('components/footer') ?>
+    <?= $this->renderSection('scripts') ?>
+
 </div>
