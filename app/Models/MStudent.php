@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Student;
+use App\Libraries\DataParams;
 use CodeIgniter\Model;
 use App\Models\MAcademic; // Import MAcademic
 
@@ -89,6 +90,49 @@ class MStudent extends Model
     protected $afterFind = [];
     protected $beforeDelete = [];
     protected $afterDelete = [];
+
+    public function getFilteredProducts(DataParams $params)
+    {
+        if (!empty($params->search)) {
+            $this->groupStart()
+                ->like('name', $params->search, 'both', null, true)
+                ->orLike('study_program', $params->search, 'both', null, true)
+                ->orLike('academic_status', $params->search, 'both', null, true);
+
+            if (is_numeric($params->search)) {
+                $this->orWhere('CAST (student_id AS TEXT) LIKE', "%$params->search%")
+                    ->orWhere('CAST (current_semester AS TEXT) LIKE', "%$params->search%")
+                    ->orWhere('CAST (gpa AS TEXT) LIKE', "%$params->search%")
+                    ->orWhere('CAST (entry_year AS TEXT) LIKE', "%$params->search%");
+            }
+            $this->groupEnd();
+        }
+
+        if (!empty(($params->study_program))) {
+            $this->where("study_program", $params->study_program);
+        }
+
+        if (!empty($params->academic_status)) {
+            $this->where("academic_status", $params->academic_status);
+        }
+
+        if (!empty($params->entry_year)) {
+            $this->where("entry_year", $params->entry_year);
+        }
+
+        $allowedSortColumns = ['student_id', 'name', 'study_program', 'current_semester', 'academic_status', 'entry_year', 'gpa'];
+        $sort = in_array($params->sort, $allowedSortColumns) ? $params->sort : 'student_id';
+        $order = ($params->order == 'asc') ? 'asc' : 'desc';
+
+        $this->orderBy($sort, $order);
+        $result = [
+            'students' => $this->paginate($params->perPage, 'students', $params->page),
+            'pager' => $this->pager,
+            'total' => $this->countAllResults(false),
+        ];
+
+        return $result;
+    }
 
 
     private function calculateGPA($courses)
