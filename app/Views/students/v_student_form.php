@@ -38,10 +38,16 @@
 
                 <div class="mb-3">
                     <label for="study_program" class="form-label">Study Program</label>
-                    <input type="text" name="study_program"
-                        class="form-control <?= session('errors.study_program') ? 'is-invalid' : '' ?>"
-                        value="<?= old('study_program', isset($student) ? $student->study_program : '') ?>"
+                    <select name="study_program"
+                        class="form-select <?= session('errors.academic_status') ? 'is-invalid' : '' ?>"
                         data-pristine-required data-pristine-required-message="Study Program is required">
+                        <option value="" <?= old('study_program', isset($student) ? $student->study_program : '') ? 'disabled' : '' ?>>Select Proram</option>
+                        <option value="Artificial Intelligence" <?= old('study_program', isset($student) ? $student->study_program : '') == 'Artificial Intelligence' ? 'selected' : '' ?>>Artificial
+                            Intelligence</option>
+                        <option value="Cyber Security" <?= old('study_program', isset($student) ? $student->study_program : '') == 'Cyber Security' ? 'selected' : '' ?>>Cyber Security</option>
+                        <option value="Programming Expert" <?= old('study_program', isset($student) ? $student->study_program : '') == 'Programming Expert' ? 'selected' : '' ?>>Programming Expert
+                        </option>
+                    </select>
                     <div class="text-danger"><?= session('errors.study_program') ?? '' ?></div>
                 </div>
 
