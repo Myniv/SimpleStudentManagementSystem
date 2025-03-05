@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Entities\Courses;
+use App\Libraries\DataParams;
 use App\Models\MCourses;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -17,14 +18,84 @@ class CoursesController extends BaseController
     public function index()
     {
         $parser = \Config\Services::parser();
-        $courses = $this->courseModel->findAll();
+        $params = new DataParams([
+            "search" => $this->request->getGet("search"),
+            "credits" => $this->request->getGet("credits"),
+            "semester" => $this->request->getGet("semester"),
+            "perPage" => $this->request->getGet("perPage"),
+            "sort" => $this->request->getGet("sort"),
+            "order" => $this->request->getGet("order"),
+        ]);
+        $result = $this->courseModel->getFilteredProducts($params);
 
-        $coursesArray = [];
-        foreach ($courses as $course) {
-            $courseData = $course->toArray();
-            $coursesArray[] = $courseData;
-        }
-        $data['courses'] = $coursesArray;
+        $data = [
+            'courses' => $result['courses'],
+            'pager' => $result['pager']->links('courses', 'custom_pager'),
+            'total' => $result['total'],
+            'search' => $params->search,
+            'reset' => $params->getResetUrl(base_url('/courses')),
+            'order' => $params->order,
+            'sort' => $params->sort,
+            'perPageOptions' => [
+                ['value' => 2, 'selected' => ($params->perPage == 2) ? 'selected' : ''],
+                ['value' => 25, 'selected' => ($params->perPage == 25) ? 'selected' : ''],
+                ['value' => 50, 'selected' => ($params->perPage == 50) ? 'selected' : ''],
+            ],
+            'tableHeader' => [
+                [
+                    'name' => 'ID',
+                    'href' => $params->getSortUrl('id', base_url('/courses')),
+                    'is_sorted' => $params->isSortedBy('id') ? ($params->getSortDirection() == 'asc' ?
+                        '↑' : '↓') : ''
+                ],
+                [
+                    'name' => 'Course Name',
+                    'href' => $params->getSortUrl('name', base_url('/courses')),
+                    'is_sorted' => $params->isSortedBy('name') ? ($params->getSortDirection() == 'asc' ?
+                        '↑' : '↓') : ''
+                ],
+                [
+                    'name' => 'Code',
+                    'href' => $params->getSortUrl('code', base_url('/courses')),
+                    'is_sorted' => $params->isSortedBy('code') ? ($params->getSortDirection() == 'asc' ?
+                        '↑' : '↓') : ''
+                ],
+                [
+                    'name' => 'Credits',
+                    'href' => $params->getSortUrl('credits', base_url('/courses')),
+                    'is_sorted' => $params->isSortedBy('credits') ? ($params->getSortDirection() == 'asc' ?
+                        '↑' : '↓') : ''
+                ],
+                [
+                    'name' => 'Semester',
+                    'href' => $params->getSortUrl('semester', base_url('/courses')),
+                    'is_sorted' => $params->isSortedBy('semester') ? ($params->getSortDirection() == 'asc' ?
+                        '↑' : '↓') : ''
+                ],
+            ],
+            'baseUrl' => base_url('/courses'),
+            'filterCredits' => [
+                ['name' => '1', 'value' => 1, 'selected' => ($params->credits == 1) ? 'selected' : ''],
+                ['name' => '2', 'value' => 2, 'selected' => ($params->credits == 2) ? 'selected' : ''],
+                ['name' => '3', 'value' => 3, 'selected' => ($params->credits == 3) ? 'selected' : ''],
+                ['name' => '4', 'value' => 4, 'selected' => ($params->credits == 4) ? 'selected' : ''],
+                ['name' => '5', 'value' => 5, 'selected' => ($params->credits == 5) ? 'selected' : ''],
+                ['name' => '6', 'value' => 6, 'selected' => ($params->credits == 6) ? 'selected' : ''],
+
+            ],
+            'filterSemester' => [
+
+                ['name' => '1', 'value' => 1, 'selected' => ($params->semester == 1) ? 'selected' : ''],
+                ['name' => '2', 'value' => 2, 'selected' => ($params->semester == 2) ? 'selected' : ''],
+                ['name' => '3', 'value' => 3, 'selected' => ($params->semester == 3) ? 'selected' : ''],
+                ['name' => '4', 'value' => 4, 'selected' => ($params->semester == 4) ? 'selected' : ''],
+                ['name' => '5', 'value' => 5, 'selected' => ($params->semester == 5) ? 'selected' : ''],
+                ['name' => '6', 'value' => 6, 'selected' => ($params->semester == 6) ? 'selected' : ''],
+                ['name' => '7', 'value' => 7, 'selected' => ($params->semester == 8) ? 'selected' : ''],
+                ['name' => '8', 'value' => 8, 'selected' => ($params->semester == 8) ? 'selected' : ''],
+
+            ],
+        ];
 
         $data['content'] = $parser->setData($data)
             ->render(

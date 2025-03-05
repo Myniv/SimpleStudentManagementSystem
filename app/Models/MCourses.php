@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Libraries\DataParams;
 use CodeIgniter\Model;
 
 class MCourses extends Model
@@ -73,4 +74,40 @@ class MCourses extends Model
     protected $afterFind = [];
     protected $beforeDelete = [];
     protected $afterDelete = [];
+
+    public function getFilteredProducts(DataParams $params)
+    {
+        if (!empty($params->search)) {
+            $this->groupStart()
+                ->like('code', $params->search, 'both', null, true)
+                ->orLike('name', $params->search, 'both', null, true);
+
+            if (is_numeric($params->search)) {
+                $this->orWhere('credits', $params->search)
+                    ->orWhere('semester', $params->search)
+                    ->orWhere('id', $params->search);
+            }
+            $this->groupEnd();
+        }
+
+        if (!empty($params->credits)) {
+            $this->where('credits', $params->credits);
+        }
+        if (!empty(($params->semester))) {
+            $this->where('semester', $params->semester);
+        }
+
+        $allowedSortColumns = ['id', 'code', 'name', 'credits', 'semester'];
+        $sort = in_array($params->sort, $allowedSortColumns) ? $params->sort : 'id';
+        $order = ($params->order == 'asc') ? 'asc' : 'desc';    
+
+        $this->orderBy($sort, $order);
+        $result = [
+            'courses' => $this->paginate($params->perPage, 'courses', $params->page),
+            'pager' => $this->pager,
+            'total' => $this->countAllResults(false),
+        ];
+        
+        return $result;
+    }
 }

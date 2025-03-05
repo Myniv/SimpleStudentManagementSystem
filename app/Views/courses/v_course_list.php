@@ -1,16 +1,78 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Academic Courses</h2>
 
-    <a href="/courses/create">Add Courses</a>
+    <a href="/courses/create" class="btn btn-primary">Add Courses</a>
+    <form action="{baseUrl}" method="get" class="form-inline mb-3">
+        <div class="row mb-4">
+            <div class="col-md-5">
+                <div class="input-group mr-2">
+                    <input type="text" class="form-control" name="search" value="{search}" placeholder="Search...">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="input-group ml-2">
+                    <select name="credits" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Credits</option>
+                        {filterCredits}
+                        <option value="{value}" {selected}>
+                            Credits {name}
+                        </option>
+                        {/filterCredits}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="input-group ml-2">
+                    <select name="semester" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Semester</option>
+                        {filterSemester}
+                        <option value="{value}" {selected}>
+                            Semester {name}
+                        </option>
+                        {/filterSemester}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <a href="{reset}" class="btn btn-secondary ml-2">
+                    Reset
+                </a>
+            </div>
+
+            <div class="col-md-2">
+                <div class="input-group ml-2">
+                    <select name="perPage" class="form-select" onchange="this.form.submit()">
+                        {perPageOptions}
+                        <option value="{value}" {selected}>
+                            {value} per Page
+                        </option>
+                        {/perPageOptions}
+                    </select>
+                </div>
+            </div>
+
+            <input type="hidden" name="sort" value="{sort}">
+            <input type="hidden" name="order" value="{order}">
+
+        </div>
+    </form>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Course Name</th>
-                    <th>Code</th>
-                    <th>Credits</th>
-                    <th>Semester</th>
+                    {tableHeader}
+                    <th>
+                        <a class="text-white text-decoration-none" href="{href}">
+                            {name} {is_sorted}
+                        </a>
+                    </th>
+                    {/tableHeader}
                     <th>Action</th>
                 </tr>
             </thead>
@@ -37,5 +99,7 @@
                 {/courses}
             </tbody>
         </table>
+
+        {!pager!}
     </div>
 </div>
