@@ -83,9 +83,9 @@ class MCourses extends Model
                 ->orLike('name', $params->search, 'both', null, true);
 
             if (is_numeric($params->search)) {
-                $this->orWhere('credits', $params->search)
-                    ->orWhere('semester', $params->search)
-                    ->orWhere('id', $params->search);
+                $this->orWhere('CAST (credits AS TEXT) LIKE', "%$params->search%")
+                    ->orWhere('CAST (semester AS TEXT) LIKE', "%$params->search%")
+                    ->orWhere('CAST (id AS TEXT) LIKE', "%$params->search%");
             }
             $this->groupEnd();
         }
@@ -99,7 +99,7 @@ class MCourses extends Model
 
         $allowedSortColumns = ['id', 'code', 'name', 'credits', 'semester'];
         $sort = in_array($params->sort, $allowedSortColumns) ? $params->sort : 'id';
-        $order = ($params->order == 'asc') ? 'asc' : 'desc';    
+        $order = ($params->order == 'asc') ? 'asc' : 'desc';
 
         $this->orderBy($sort, $order);
         $result = [
@@ -107,7 +107,7 @@ class MCourses extends Model
             'pager' => $this->pager,
             'total' => $this->countAllResults(false),
         ];
-        
+
         return $result;
     }
 }
