@@ -39,9 +39,9 @@ class CoursesController extends BaseController
             'sort' => $params->sort,
             'page' => $params->page,
             'perPageOptions' => [
-                ['value' => 2, 'selected' => ($params->perPage == 2) ? 'selected' : ''],
+                ['value' => 5, 'selected' => ($params->perPage == 5) ? 'selected' : ''],
+                ['value' => 10, 'selected' => ($params->perPage == 10) ? 'selected' : ''],
                 ['value' => 25, 'selected' => ($params->perPage == 25) ? 'selected' : ''],
-                ['value' => 50, 'selected' => ($params->perPage == 50) ? 'selected' : ''],
             ],
             'tableHeader' => [
                 [

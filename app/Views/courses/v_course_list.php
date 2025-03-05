@@ -1,7 +1,7 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Academic Courses</h2>
 
-    <a href="/courses/create" class="btn btn-primary">Add Courses</a>
+    <a href="/courses/create" class="btn btn-primary mb-1">Add Courses</a>
     <form action="{baseUrl}" method="get" class="form-inline mb-3">
         <div class="row mb-4">
             <div class="col-md-5">
@@ -40,13 +40,13 @@
             </div>
 
             <div class="col-md-1">
-                <a href="{reset}" class="btn btn-secondary ml-2">
+                <a href="{reset}" class="btn btn-secondary">
                     Reset
                 </a>
             </div>
 
             <div class="col-md-2">
-                <div class="input-group ml-2">
+                <div class="input-group">
                     <select name="perPage" class="form-select" onchange="this.form.submit()">
                         {perPageOptions}
                         <option value="{value}" {selected}>
