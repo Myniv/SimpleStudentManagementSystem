@@ -46,10 +46,10 @@ class DataParams
 
             'credits' => $this->credits,
             'semester' => $this->semester,
-            
+
             'sort' => $this->sort,
             'order' => $this->order,
-            'page_products' => $this->page,
+            'page' => $this->page,
             'perPage' => $this->perPage,
         ];
     }

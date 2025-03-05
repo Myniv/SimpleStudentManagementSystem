@@ -25,6 +25,7 @@ class CoursesController extends BaseController
             "perPage" => $this->request->getGet("perPage"),
             "sort" => $this->request->getGet("sort"),
             "order" => $this->request->getGet("order"),
+            "page" => $this->request->getGet("page_courses"),
         ]);
         $result = $this->courseModel->getFilteredProducts($params);
 
@@ -36,6 +37,7 @@ class CoursesController extends BaseController
             'reset' => $params->getResetUrl(base_url('/courses')),
             'order' => $params->order,
             'sort' => $params->sort,
+            'page' => $params->page,
             'perPageOptions' => [
                 ['value' => 2, 'selected' => ($params->perPage == 2) ? 'selected' : ''],
                 ['value' => 25, 'selected' => ($params->perPage == 25) ? 'selected' : ''],
