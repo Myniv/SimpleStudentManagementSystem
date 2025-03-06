@@ -134,6 +134,20 @@ class MStudent extends Model
         return $result;
     }
 
+    public function getAllStudyPrograms()
+    {
+        return $this->select('study_program')->distinct()->findAll();
+    }
+
+    public function getAllAcademicStatuses()
+    {
+        return $this->select('academic_status')->distinct()->findAll();
+    }
+
+    public function getAllEntryYear()
+    {
+        return $this->select('entry_year')->orderBy('entry_year', 'asc')->distinct()->findAll();
+    }
 
     private function calculateGPA($courses)
     {

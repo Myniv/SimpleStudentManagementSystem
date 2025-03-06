@@ -17,8 +17,8 @@
                 <select name="study_program" class="form-select" onchange="this.form.submit()">
                     <option value="">Program</option>
                     {filterStudyProgram}
-                    <option value="{value}" {selected}>
-                        {name}
+                    <option value="{study_program}" {selected}>
+                        {study_program}
                     </option>
                     {/filterStudyProgram}
                 </select>
@@ -30,8 +30,8 @@
                 <select name="academic_status" class="form-select" onchange="this.form.submit()">
                     <option value="">Status</option>
                     {filterAcademicStatus}
-                    <option value="{value}" {selected}>
-                        {name}
+                    <option value="{academic_status}" {selected}>
+                        {academic_status }
                     </option>
                     {/filterAcademicStatus}
                 </select>
@@ -43,14 +43,14 @@
                 <select name="entry_year" class="form-select" onchange="this.form.submit()">
                     <option value="">Entry Year</option>
                     {filterEntryYear}
-                    <option value="{value}" {selected}>
-                        {name}
+                    <option value="{entry_year}" {selected}>
+                        {entry_year}
                     </option>
                     {/filterEntryYear}
                 </select>
             </div>
         </div>
-        
+
         <div class="col-md-2">
             <div class="input-group">
                 <select name="perPage" class="form-select" onchange="this.form.submit()">

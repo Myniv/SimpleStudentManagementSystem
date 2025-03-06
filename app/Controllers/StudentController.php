@@ -32,6 +32,21 @@ class StudentController extends BaseController
         ]);
         $result = $this->studentModel->getFilteredProducts($params);
 
+        $studyProgram = $this->studentModel->getAllStudyPrograms();
+        foreach ($studyProgram as $value) {
+            $value->selected = $params->study_program == $value->study_program ? 'selected' : '';
+        }
+
+        $academicStatus = $this->studentModel->getAllAcademicStatuses();
+        foreach ($academicStatus as $value) {
+            $value->selected = $params->academic_status == $value->academic_status ? 'selected' : '';
+        }
+
+        $entryYear = $this->studentModel->getAllEntryYear();
+        foreach ($entryYear as $value) {
+            $value->selected = $params->entry_year == $value->entry_year ? 'selected' : '';
+        }
+
         $data = [
             'students' => $result['students'],
             'pager' => $result['pager']->links('students', 'custom_pager'),
@@ -47,25 +62,9 @@ class StudentController extends BaseController
                 ['value' => 10, 'selected' => ($params->perPage == 10) ? 'selected' : ''],
                 ['value' => 25, 'selected' => ($params->perPage == 25) ? 'selected' : ''],
             ],
-            'filterStudyProgram' => [
-                ['name' => 'Programming Expert', 'value' => "Programming Expert", 'selected' => ($params->study_program == "Programming Expert") ? 'selected' : ''],
-                ['name' => 'Artificial Intelligence', 'value' => "Artificial Intelligence", 'selected' => ($params->study_program == "Artificial Intelligence") ? 'selected' : ''],
-                ['name' => 'Cyber Security', 'value' => "Cyber Security", 'selected' => ($params->study_program == "Cyber Security") ? 'selected' : ''],
-            ],
-            'filterAcademicStatus' => [
-                ['name' => 'Active', 'value' => "Active", 'selected' => ($params->academic_status == "Active") ? 'selected' : ''],
-                ['name' => 'On Leave', 'value' => "On Leave", 'selected' => ($params->academic_status == "On Leave") ? 'selected' : ''],
-                ['name' => 'Graduated', 'value' => "Graduated", 'selected' => ($params->academic_status == "Graduated") ? 'selected' : ''],
-            ],
-            'filterEntryYear' => [
-                ['name' => '2019', 'value' => "2019", 'selected' => ($params->entry_year == "2019") ? 'selected' : ''],
-                ['name' => '2020', 'value' => "2020", 'selected' => ($params->entry_year == "2020") ? 'selected' : ''],
-                ['name' => '2021', 'value' => "2021", 'selected' => ($params->entry_year == "2021") ? 'selected' : ''],
-                ['name' => '2022', 'value' => "2022", 'selected' => ($params->entry_year == "2022") ? 'selected' : ''],
-                ['name' => '2023', 'value' => "2023", 'selected' => ($params->entry_year == "2023") ? 'selected' : ''],
-                ['name' => '2024', 'value' => "2024", 'selected' => ($params->entry_year == "2024") ? 'selected' : ''],
-                ['name' => '2025', 'value' => "2025", 'selected' => ($params->entry_year == "2025") ? 'selected' : ''],
-            ],
+            'filterStudyProgram' => $studyProgram,
+            'filterAcademicStatus' => $academicStatus,
+            'filterEntryYear' => $entryYear,
             'tableHeader' => [
                 [
                     'name' => 'ID',
