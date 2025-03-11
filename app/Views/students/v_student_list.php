@@ -1,6 +1,6 @@
 <h2 class="text-center my-4">Student List</h2>
 
-<a href="/students/create" class="btn btn-primary mb-1">Add Student</a>
+<a href="/admin/student/create" class="btn btn-primary mb-1">Add Student</a>
 <form action="{baseUrl}" method="get" class="form-inline mb-3">
     <div class="row mb-4">
         <div class="col-md-3">
@@ -101,10 +101,10 @@
                 <td>{gpa}</td>
                 <td>
                     <button class="btn btn-primary btn-sm"
-                        onclick="window.location.href='students/show/{id}'">Detail</button>
+                        onclick="window.location.href='/admin/student/show/{id}'">Detail</button>
                     <button class="btn btn-success btn-sm"
-                        onclick="window.location.href='students/update/{id}'">Edit</button>
-                    <form action="/students/delete/{id}" method="post" class="d-inline">
+                        onclick="window.location.href='/admin/student/update/{id}'">Edit</button>
+                    <form action="/admin/student/delete/{id}" method="post" class="d-inline">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-danger btn-sm"
                             onclick="return confirm('Are you sure want to delete this student?');">

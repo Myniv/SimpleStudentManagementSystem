@@ -1,7 +1,7 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Academic Courses</h2>
 
-    <a href="/courses/create" class="btn btn-primary mb-1">Add Courses</a>
+    <a href="/lecturer/courses/create" class="btn btn-primary mb-1">Add Courses</a>
     <form action="{baseUrl}" method="get" class="form-inline mb-3">
         <div class="row mb-4">
             <div class="col-md-5">
@@ -87,7 +87,7 @@
                     <td>
                         <button class="btn btn-success btn-sm"
                             onclick="window.location.href='courses/update/{id}'">Edit</button>
-                        <form action="/courses/delete/{id}" method="post" class="d-inline">
+                        <form action="/lecturer/courses/delete/{id}" method="post" class="d-inline">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="btn btn-danger btn-sm"
                                 onclick="return confirm('Are you sure want to delete this student?');">

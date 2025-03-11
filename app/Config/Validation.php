@@ -25,6 +25,7 @@ class Validation extends BaseConfig
         FormatRules::class,
         FileRules::class,
         CreditCardRules::class,
+        \Myth\Auth\Authentication\Passwords\ValidationRules::class
     ];
 
     /**
@@ -34,7 +35,7 @@ class Validation extends BaseConfig
      * @var array<string, string>
      */
     public array $templates = [
-        'list'   => 'CodeIgniter\Validation\Views\list',
+        'list' => 'CodeIgniter\Validation\Views\list',
         'single' => 'CodeIgniter\Validation\Views\single',
     ];
 

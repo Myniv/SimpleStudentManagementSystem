@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <form
-                action="<?= isset($student) ? base_url('students/update/' . $student->id) : base_url('students/create') ?>"
+                action="<?= isset($student) ? base_url('admin/student/update/' . $student->id) : base_url('admin/student/create') ?>"
                 method="post" id="formData" novalidate>
                 <?= csrf_field() ?>
                 <?php if (isset($student)): ?>

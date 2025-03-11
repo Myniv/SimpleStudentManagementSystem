@@ -34,7 +34,7 @@ class CoursesController extends BaseController
             'pager' => $result['pager']->links('courses', 'custom_pager'),
             'total' => $result['total'],
             'search' => $params->search,
-            'reset' => $params->getResetUrl(base_url('/courses')),
+            'reset' => $params->getResetUrl(base_url('/lecturer/courses')),
             'order' => $params->order,
             'sort' => $params->sort,
             'page' => $params->page,
@@ -46,36 +46,36 @@ class CoursesController extends BaseController
             'tableHeader' => [
                 [
                     'name' => 'ID',
-                    'href' => $params->getSortUrl('id', base_url('/courses')),
+                    'href' => $params->getSortUrl('id', base_url('/lecturer/courses')),
                     'is_sorted' => $params->isSortedBy('id') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Course Name',
-                    'href' => $params->getSortUrl('name', base_url('/courses')),
+                    'href' => $params->getSortUrl('name', base_url('/lecturer/courses')),
                     'is_sorted' => $params->isSortedBy('name') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Code',
-                    'href' => $params->getSortUrl('code', base_url('/courses')),
+                    'href' => $params->getSortUrl('code', base_url('/lecturer/courses')),
                     'is_sorted' => $params->isSortedBy('code') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Credits',
-                    'href' => $params->getSortUrl('credits', base_url('/courses')),
+                    'href' => $params->getSortUrl('credits', base_url('/lecturer/courses')),
                     'is_sorted' => $params->isSortedBy('credits') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Semester',
-                    'href' => $params->getSortUrl('semester', base_url('/courses')),
+                    'href' => $params->getSortUrl('semester', base_url('/lecturer/courses')),
                     'is_sorted' => $params->isSortedBy('semester') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
             ],
-            'baseUrl' => base_url('/courses'),
+            'baseUrl' => base_url('/lecturer/courses'),
             'filterCredits' => [
                 ['name' => '1', 'value' => 1, 'selected' => ($params->credits == 1) ? 'selected' : ''],
                 ['name' => '2', 'value' => 2, 'selected' => ($params->credits == 2) ? 'selected' : ''],
@@ -127,7 +127,7 @@ class CoursesController extends BaseController
 
         $this->courseModel->save($formData);
 
-        return redirect()->to('/courses');
+        return redirect()->to('/lecturer/courses');
     }
 
     public function update($id)
@@ -154,12 +154,12 @@ class CoursesController extends BaseController
 
         $this->courseModel->save($formData);
 
-        return redirect()->to('/courses');
+        return redirect()->to('/lecturer/courses');
     }
 
     public function delete($id)
     {
         $this->courseModel->delete($id);
-        return redirect()->to('/courses');
+        return redirect()->to('/lecturer/courses');
     }
 }

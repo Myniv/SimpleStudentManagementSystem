@@ -52,11 +52,11 @@ class StudentController extends BaseController
             'pager' => $result['pager']->links('students', 'custom_pager'),
             'total' => $result['total'],
             'search' => $params->search,
-            'reset' => $params->getResetUrl(base_url('/students')),
+            'reset' => $params->getResetUrl(base_url('/admin/student')),
             'order' => $params->order,
             'sort' => $params->sort,
             'page' => $params->page,
-            'baseUrl' => base_url('/students'),
+            'baseUrl' => base_url('/admin/student'),
             'perPageOptions' => [
                 ['value' => 5, 'selected' => ($params->perPage == 5) ? 'selected' : ''],
                 ['value' => 10, 'selected' => ($params->perPage == 10) ? 'selected' : ''],
@@ -68,43 +68,43 @@ class StudentController extends BaseController
             'tableHeader' => [
                 [
                     'name' => 'ID',
-                    'href' => $params->getSortUrl('student_id', base_url('/students')),
+                    'href' => $params->getSortUrl('student_id', base_url('/admin/student')),
                     'is_sorted' => $params->isSortedBy('student_id') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Student Name',
-                    'href' => $params->getSortUrl('name', base_url('/students')),
+                    'href' => $params->getSortUrl('name', base_url('/admin/student')),
                     'is_sorted' => $params->isSortedBy('name') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Study Program',
-                    'href' => $params->getSortUrl('study_program', base_url('/students')),
+                    'href' => $params->getSortUrl('study_program', base_url('/admin/student')),
                     'is_sorted' => $params->isSortedBy('study_program') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Current Semester',
-                    'href' => $params->getSortUrl('current_semester', base_url('/students')),
+                    'href' => $params->getSortUrl('current_semester', base_url('/admin/student')),
                     'is_sorted' => $params->isSortedBy('current_semester') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Status',
-                    'href' => $params->getSortUrl('academic_status', base_url('/students')),
+                    'href' => $params->getSortUrl('academic_status', base_url('/admin/student')),
                     'is_sorted' => $params->isSortedBy('academic_status') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'Entry Year',
-                    'href' => $params->getSortUrl('entry_year', base_url('/students')),
+                    'href' => $params->getSortUrl('entry_year', base_url('/admin/student')),
                     'is_sorted' => $params->isSortedBy('entry_year') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
                 [
                     'name' => 'GPA',
-                    'href' => $params->getSortUrl('gpa', base_url('/students')),
+                    'href' => $params->getSortUrl('gpa', base_url('/admin/student')),
                     'is_sorted' => $params->isSortedBy('gpa') ? ($params->getSortDirection() == 'asc' ?
                         '↑' : '↓') : ''
                 ],
@@ -167,7 +167,7 @@ class StudentController extends BaseController
 
         $this->studentModel->save($formData);
 
-        return redirect()->to('/students');
+        return redirect()->to('/admin/student');
     }
 
     public function update($id)
@@ -197,13 +197,13 @@ class StudentController extends BaseController
 
         $this->studentModel->save($formData);
 
-        return redirect()->to('/students');
+        return redirect()->to('/admin/student');
     }
 
     public function delete($id)
     {
         $this->studentModel->delete($id);
-        return redirect()->to('/students');
+        return redirect()->to('/admin/student');
     }
 
 }
