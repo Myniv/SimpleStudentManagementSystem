@@ -21,6 +21,13 @@ class CreateStudentsTable extends Migration
                 'unsigned' => true,
                 'unique' => true
             ],
+            'student_id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+                'unique' => true,
+                'null' => true,
+            ],
             'name' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
@@ -61,7 +68,8 @@ class CreateStudentsTable extends Migration
             ],
         ]);
 
-        $this->forge->addKey('id',true);
+        $this->forge->addKey('id', true);
+        $this->forge->addForeignKey('student_id', 'users', 'id');
         $this->forge->createTable('students');
     }
 
