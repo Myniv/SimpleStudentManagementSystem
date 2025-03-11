@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use Myth\Auth\Entities\User;
 use Myth\Auth\Models\GroupModel;
 use Myth\Auth\Models\UserModel;
 
@@ -71,6 +72,23 @@ class UsersController extends BaseController
         $user->password = $this->request->getVar('password');
         $user->active = 1;
 
+        $checkExistingEmail = $this->userModel->where('email', $user->email)->first();
+        $checkExistingEmailSoftDelete = $this->userModel->withDeleted()->where('email', $user->email)->first();
+        if ($checkExistingEmail) {
+            return redirect()->to('admin/users')->with('error', 'Email already exists');
+        } elseif ($checkExistingEmailSoftDelete) {
+            return redirect()->to('admin/users')->with('error', 'Email already exists as deleted user');
+        }
+
+
+        $checkExistingUsername = $this->userModel->where('username', $user->username)->first();
+        $checkExistingUsernameSoftDelete = $this->userModel->withDeleted()->where('username', $user->username)->first();
+        if ($checkExistingUsername) {
+            return redirect()->to('admin/users')->with('error', 'Username already exists');
+        } elseif ($checkExistingUsernameSoftDelete) {
+            return redirect()->to('admin/users')->with('error', 'Username already exists as deleted user');
+        }
+
         $this->userModel->save($user);
 
         $newUser = $this->userModel->where('email', $user->email)->first();
@@ -92,16 +110,22 @@ class UsersController extends BaseController
         $newUsername = $this->request->getVar('username');
         if ($user->username != $newUsername) {
             $existingUser = $this->userModel->where('username', $newUsername)->first();
+            $existingUserWithSoftDelete = $this->userModel->withDeleted()->where('username', $newUsername)->first();
             if ($existingUser) {
                 return redirect()->to('admin/users')->with('error', 'Username already exists');
+            } elseif ($existingUserWithSoftDelete) {
+                return redirect()->to('admin/users')->with('error', 'Username already exists as deleted user');
             }
         }
 
         $newEmail = $this->request->getVar('email');
         if ($user->email != $newEmail) {
             $existingEmail = $this->userModel->where('email', $newEmail)->first();
+            $existingEmailWithSoftDelete = $this->userModel->withDeleted()->where('email', $newEmail)->first();
             if ($existingEmail) {
                 return redirect()->to('admin/users')->with('error', 'Email already exists');
+            } else if ($existingEmailWithSoftDelete) {
+                return redirect()->to('admin/users')->with('error', 'Email already exists as deleted user');
             }
         }
 
@@ -117,7 +141,7 @@ class UsersController extends BaseController
             'id' => $id,
             'username' => $newUsername,
             'email' => $newEmail,
-            // 'password' => $password,
+            'password' => $password,
             'active' => $this->request->getVar('status') ? 1 : 0,
         ];
 
@@ -125,7 +149,9 @@ class UsersController extends BaseController
             $data['password'] = $password;
         }
 
-        $this->userModel->save($data);
+        $userObject = new User($data);
+
+        $this->userModel->save($userObject);
 
         $groupId = $this->request->getVar('group');
         if (!empty($groupId)) {

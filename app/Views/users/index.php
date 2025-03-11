@@ -29,7 +29,7 @@
                     <th>Email</th>
                     <th>Status</th>
                     <th>Grup</th>
-                    <th>Aksi</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
