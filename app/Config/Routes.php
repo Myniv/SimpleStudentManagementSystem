@@ -14,7 +14,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->group(
     'admin',
-    // ['filter' => 'role:admin'],
+    ['filter' => 'role:admin'],
     function (RouteCollection $routes) {
         $routes->get('student', [StudentController::class, 'index']);
         $routes->get('student/show/(:num)', [StudentController::class, 'show/$1']);
@@ -26,7 +26,7 @@ $routes->group(
 
 $routes->group(
     'lecturer',
-    // ['filter' => 'role:lecturer'], 
+    ['filter' => 'role:lecturer'],
     function (RouteCollection $routes) {
         $routes->get('dashboard', [AuthController::class, 'dashboardLecturer']);
         $routes->get('courses', [CoursesController::class, 'index']);
@@ -59,9 +59,9 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 
 $routes->get('unauthorized', [AuthController::class, 'unauthorized'], ['as' => 'unauthorized']);
 
-$routes->get('admin/dashboard', [AuthController::class, 'dashboardAdmin'], ['filter' => 'role:admin']);
-$routes->get('lecturer/dashboard', [AuthController::class, 'dashboardLecturer'], ['filter' => 'role:lecturer']);
-$routes->get('student/dashboard', [AuthController::class, 'dashboardStudent'], ['filter' => 'role:student']);
+// $routes->get('admin/dashboard', [AuthController::class, 'dashboardAdmin'], ['filter' => 'role:admin']);
+// $routes->get('lecturer/dashboard', [AuthController::class, 'dashboardLecturer'], ['filter' => 'role:lecturer']);
+// $routes->get('student/dashboard', [AuthController::class, 'dashboardStudent'], ['filter' => 'role:student']);
 
 $routes->group(
     'admin/users',
@@ -75,3 +75,8 @@ $routes->group(
         $routes->delete('delete/(:num)', [UsersController::class, 'delete/$1']);
     }
 );
+
+$routes->get('register-student', [UsersController::class, 'createUserStudent']);
+$routes->post('store-register-student', [UsersController::class, 'storeUserStudent']);
+
+$routes->get('/profile', [StudentController::class, 'profile']);

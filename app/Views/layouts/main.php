@@ -17,8 +17,12 @@
 <div class="d-flex flex-column min-vh-100">
     <?= $this->include('components/header') ?>
     <div class="flex-grow-1">
+        <?php if (logged_in()): ?>
+            <?php if (in_groups('admin')): ?>
+                <?= $this->include('components/sidebar') ?>
+            <?php endif; ?>
+        <?php endif; ?>
         <div class="container mt-4">
-            <?= $this->include('components/sidebar') ?>
             <?= $this->renderSection('content') ?>
         </div>
     </div>

@@ -7,13 +7,16 @@ use App\Entities\StudentDb;
 use App\Libraries\DataParams;
 use App\Models\MStudent;
 use CodeIgniter\HTTP\ResponseInterface;
+use Myth\Auth\Models\UserModel;
 
 class StudentController extends BaseController
 {
     private $studentModel;
+    protected $userModel;
 
     public function __construct()
     {
+        $this->userModel = new UserModel();
         $this->studentModel = new MStudent();
     }
 
@@ -125,6 +128,35 @@ class StudentController extends BaseController
     {
         $parser = \Config\Services::parser();
         $getStudent = $this->studentModel->find($id);
+
+        $student = $getStudent->toArray();
+        $student['status_cell'] = view_cell('AcademicStatusCell', ['status' => $student['academic_status']]);
+        // $student['grade_cell'] = view_cell('LatestGradesCell', ['course' => $student['courses'], 'filter' => false]);
+        $student['profile_picture'] = base_url("iconOrang.png");
+
+
+        $data = $student;
+        // print_r($students);
+
+        $data['content'] = $parser->setData($data)
+            ->render(
+                "students/v_student_profile",
+                // ['cache' => 3600, 'cache_name' => 'student_profile']
+            );
+
+        return view('components/v_parser_layout', $data);
+    }
+
+    public function profile()
+    {
+        $parser = \Config\Services::parser();
+
+        $user = user()->username;
+        $newUser = $this->userModel->where('username', $user)->first();
+
+        $getStudent = $this->studentModel
+            ->where('user_id', $newUser->id)
+            ->first();
 
         $student = $getStudent->toArray();
         $student['status_cell'] = view_cell('AcademicStatusCell', ['status' => $student['academic_status']]);

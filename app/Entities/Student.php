@@ -15,6 +15,7 @@ class Student extends Entity
         "academic_status"=>null,
         "entry_year"=>null,
         "gpa"=>null,
+        "user_id"=>null,
         "created_at" => null,
         "updated_at"=> null,
     ];
@@ -22,6 +23,7 @@ class Student extends Entity
     protected $casts = [
         'id' => 'integer',
         'student_id' => 'integer',
+        'user_id' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

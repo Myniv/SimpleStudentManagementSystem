@@ -16,7 +16,7 @@ class MStudent extends Model
     protected $returnType = \App\Entities\Student::class;
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ["student_id", "name", "study_program", "current_semester", "academic_status", "entry_year", "gpa"];
+    protected $allowedFields = ["student_id", "name", "study_program", "current_semester", "academic_status", "entry_year", "gpa", "user_id"];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

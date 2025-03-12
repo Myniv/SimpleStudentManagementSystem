@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\MStudent;
 use Myth\Auth\Entities\User;
 use Myth\Auth\Models\GroupModel;
 use Myth\Auth\Models\UserModel;
@@ -10,6 +11,8 @@ use Myth\Auth\Models\UserModel;
 class UsersController extends BaseController
 {
     protected $userModel;
+    private $studentModel;
+
     protected $groupModel;
     protected $db;
     protected $config;
@@ -18,6 +21,7 @@ class UsersController extends BaseController
     {
         $this->userModel = new UserModel();
         $this->groupModel = new GroupModel();
+        $this->studentModel = new MStudent();
         $this->db = \Config\Database::connect();
         $this->config = config('Auth');
 
@@ -45,6 +49,68 @@ class UsersController extends BaseController
         ];
 
         return view('users/v_user_create', $data);
+    }
+
+    public function createUserStudent()
+    {
+        $data = [
+            'title' => 'Add New User',
+            'groups' => $this->groupModel->findAll(),
+            'validation' => \Config\Services::validation()
+        ];
+
+        return view('users/v_user_student_register', $data);
+    }
+    public function storeUserStudent()
+    {
+        //Add user
+        $user = new User();
+        $user->username = $this->request->getVar('username');
+        $user->email = $this->request->getVar('email');
+        $user->password = $this->request->getVar('password');
+        $user->active = 1;
+
+        $checkExistingEmail = $this->userModel->where('email', $user->email)->first();
+        if ($checkExistingEmail) {
+            return redirect()->back()->withInput()->with('errors', "Email already exists");
+        }
+
+        $checkExistingUsername = $this->userModel->where('username', $user->username)->first();
+        if ($checkExistingUsername) {
+            return redirect()->back()->withInput()->with('errors', "Username already exists");
+        }
+
+        $this->userModel->save($user);
+
+        $newUser = $this->userModel->where('email', $user->email)->first();
+        $userId = $newUser->id;
+
+        //Add Student
+        $formData = [
+            'student_id' => $this->request->getPost('student_id'),
+            'name' => $this->request->getPost('name'),
+            'study_program' => $this->request->getPost('study_program'),
+            'current_semester' => $this->request->getPost('current_semester'),
+            'academic_status' => $this->request->getPost('academic_status'),
+            'entry_year' => $this->request->getPost('entry_year'),
+            'gpa' => $this->request->getPost('gpa'),
+            'user_id' => $userId
+        ];
+
+        if (!$this->studentModel->validate($formData)) {
+            return redirect()->back()->withInput()->with('errors', $this->studentModel->errors());
+        }
+
+        $this->studentModel->save($formData);
+
+        if ($user) {
+            $studentGroup = $this->groupModel->where('name', 'student')->first();
+            if ($studentGroup) {
+                $this->groupModel->addUserToGroup($userId, $studentGroup->id);
+            }
+        }
+
+        return redirect()->to('/login')->with('message', 'User Created Successfully');
     }
 
     public function edit($id)
