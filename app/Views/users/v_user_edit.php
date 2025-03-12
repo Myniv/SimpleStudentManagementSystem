@@ -1,10 +1,7 @@
 <?= $this->extend('layouts/main'); ?>
 <?= $this->section('content'); ?>
 
-<div class="container">
-
-    <h1><?= $title; ?></h1>
-
+<div class="container mt-4 mb-4">
     <?php if (session()->has('errors')): ?>
         <div class="alert alert-danger">
             <ul>
@@ -16,6 +13,9 @@
     <?php endif; ?>
 
     <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-3"><?= $title; ?></h4>
+        </div>
         <div class="card-body">
             <form action="<?= base_url('admin/users/update/' . $user->id); ?>" method="post">
                 <?= csrf_field(); ?>
