@@ -44,11 +44,11 @@
         }
 
         .nav-link.active {
-            background-color: rgb(7, 251, 255) !important;
-            /* Yellow highlight */
-            color: black !important;
-            /* Black text */
-            /* border-color:rgb(255, 0, 0) !important; */
+            /* highlight */
+            background-color: rgb(0, 98, 255) !important;
+
+            /* text color*/
+            color: white !important;
         }
     </style>
     <script>
@@ -64,4 +64,4 @@
         });
     </script>
     </main>
-    <main>
+    <main></main>

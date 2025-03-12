@@ -33,7 +33,7 @@ class UsersController extends BaseController
             'users' => $this->userModel->findAll()
         ];
 
-        return view('users/index', $data);
+        return view('users/v_user_list', $data);
     }
 
     public function create()
@@ -44,7 +44,7 @@ class UsersController extends BaseController
             'validation' => \Config\Services::validation()
         ];
 
-        return view('users/create', $data);
+        return view('users/v_user_create', $data);
     }
 
     public function edit($id)
@@ -61,7 +61,7 @@ class UsersController extends BaseController
             return redirect()->to('/users')->with('error', 'User Not Found');
         }
 
-        return view('users/edit', $data);
+        return view('users/v_user_edit', $data);
     }
 
     public function store()

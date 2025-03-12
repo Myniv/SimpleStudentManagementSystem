@@ -22,7 +22,7 @@
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
-            <thead>
+            <thead class="table-dark">
                 <tr>
                     <th>No</th>
                     <th>Username</th>
