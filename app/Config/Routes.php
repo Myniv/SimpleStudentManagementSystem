@@ -6,6 +6,7 @@ use App\Controllers\CoursesController;
 use App\Controllers\EnrollmentController;
 use App\Controllers\Home;
 use App\Controllers\StudentController;
+use App\Controllers\StudentGradesController;
 use App\Controllers\UsersController;
 use CodeIgniter\Router\RouteCollection;
 
@@ -35,12 +36,22 @@ $routes->group(
         $routes->match(['get', 'post'], 'courses/create', [CoursesController::class, 'create']);
         $routes->match(['get', 'put'], 'courses/update/(:num)', [CoursesController::class, 'update']);
         $routes->delete('courses/delete/(:num)', [CoursesController::class, 'delete/$1']);
+
+        $routes->get('student-grades', [StudentGradesController::class, 'index']);
+        $routes->match(['get', 'post'], 'student-grades/create', [StudentGradesController::class, 'create']);
+        $routes->match(['get', 'put'], 'student-grades/update/(:num)', [StudentGradesController::class, 'update']);
+        $routes->delete('student-grades/delete/(:num)', [StudentGradesController::class, 'delete/$1']);
+
+        $routes->get('enrollments', [EnrollmentController::class, 'index']);
+        $routes->match(['get', 'post'], 'enrollments/create', [EnrollmentController::class, 'create']);
+        $routes->match(['get', 'put'], 'enrollments/update/(:num)', [EnrollmentController::class, 'update']);
+        $routes->delete('enrollments/delete/(:num)', [EnrollmentController::class, 'delete/$1']);
     }
 );
 
 $routes->group(
     'enrollments',
-    ['filter' => 'role:student'],
+    ['filter' => 'role:student,lecturer'],
     function (RouteCollection $routes) {
         $routes->get('/', [EnrollmentController::class, 'index']);
         $routes->match(['get', 'post'], 'create', [EnrollmentController::class, 'create']);
