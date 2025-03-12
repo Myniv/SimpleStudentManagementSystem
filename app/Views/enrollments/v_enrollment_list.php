@@ -3,7 +3,10 @@
 
 <h2 class="text-center my-4">Enrollment List</h2>
 
-<a href="/enrollments/create">Add Enrollment</a>
+<?php if (in_groups('lecturer')): ?>
+    <a class="btn btn-primary mb-2" href="/lecturer/enrollments/create">Add Enrollment</a>
+<?php endif; ?>
+
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
         <tr>
@@ -13,7 +16,9 @@
             <th>Academic Year</th>
             <th>Semester</th>
             <th>Status</th>
-            <th>Action</th>
+            <?php if (in_groups('lecturer')): ?>
+                <th>Action</th>
+            <?php endif; ?>
         </tr>
     </thead>
     <tbody>
@@ -25,17 +30,19 @@
                 <td><?= $enrollment->academic_year ?></td>
                 <td><?= $enrollment->semester ?></td>
                 <td><?= $enrollment->status ?></td>
-                <td>
-                    <a href="/enrollments/update/<?= $enrollment->id; ?>" class="btn btn-primary btn-sm">Edit</a>
-                    <form action="<?= base_url("enrollments/delete/{$enrollment->id}") ?>" method="post" class="d-inline">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Are you sure want to delete this student?');">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
+                <?php if (in_groups('lecturer')): ?>
+                    <td>
+                        <a href="/lecturer/enrollments/update/<?= $enrollment->id; ?>" class="btn btn-primary btn-sm">Edit</a>
+                        <form action="<?= base_url("/lecturerenrollments/delete/{$enrollment->id}") ?>" method="post" class="d-inline">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure want to delete this student?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endif; ?>
         <?php endforeach; ?>
     </tbody>
 </table>

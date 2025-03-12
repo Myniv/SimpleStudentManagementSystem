@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <form
-                action="<?= isset($enrollment) ? base_url('enrollments/update/' . $enrollment->id) : base_url('enrollments/create') ?>"
+                action="<?= isset($enrollment) ? base_url('lecturer/enrollments/update/' . $enrollment->id) : base_url('lecturer/enrollments/create') ?>"
                 method="post">
                 <?= csrf_field() ?>
                 <?php if (isset($enrollment)): ?>

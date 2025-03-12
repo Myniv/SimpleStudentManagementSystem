@@ -49,21 +49,22 @@ $routes->group(
     }
 );
 
-$routes->group(
-    'enrollments',
-    ['filter' => 'role:student,lecturer'],
-    function (RouteCollection $routes) {
-        $routes->get('/', [EnrollmentController::class, 'index']);
-        $routes->match(['get', 'post'], 'create', [EnrollmentController::class, 'create']);
-        $routes->match(['get', 'put'], 'update/(:num)', [EnrollmentController::class, 'update']);
-        $routes->delete('delete/(:num)', [EnrollmentController::class, 'delete/$1']);
-    }
-);
+// $routes->group(
+//     'enrollments',
+//     ['filter' => 'role:student,lecturer'],
+//     function (RouteCollection $routes) {
+//         $routes->get('/', [EnrollmentController::class, 'index']);
+//         $routes->match(['get', 'post'], 'create', [EnrollmentController::class, 'create']);
+//         $routes->match(['get', 'put'], 'update/(:num)', [EnrollmentController::class, 'update']);
+//         $routes->delete('delete/(:num)', [EnrollmentController::class, 'delete/$1']);
+//     }
+// );
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     // Registrasi
     $routes->get('register', 'AuthController::register', ['as' => 'register']);
     $routes->post('register', 'AuthController::attemptRegister');
+
 
     // Route lain seperti login, dll
     $routes->get('login', 'AuthController::login', ['as' => 'login']);
@@ -71,9 +72,20 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 });
 
 $routes->get('unauthorized', [AuthController::class, 'unauthorized'], ['as' => 'unauthorized']);
+$routes->get('register-student', [UsersController::class, 'createUserStudent']);
+$routes->post('store-register-student', [UsersController::class, 'storeUserStudent']);
 
 
-$routes->get('student/dashboard', [Home::class, 'dashboard'], ['filter' => 'role:student']);
+
+$routes->group(
+    'student',
+    ['filter' => 'role:student'],
+    function ($routes) {
+        $routes->get('profile', [StudentController::class, 'profile']);
+        $routes->get('dashboard', [Home::class, 'dashboard']);
+        $routes->get('enrollments', [EnrollmentController::class, 'index']);
+    }
+);
 
 $routes->group(
     'admin/users',
@@ -87,8 +99,3 @@ $routes->group(
         $routes->delete('delete/(:num)', [UsersController::class, 'delete/$1']);
     }
 );
-
-$routes->get('register-student', [UsersController::class, 'createUserStudent']);
-$routes->post('store-register-student', [UsersController::class, 'storeUserStudent']);
-
-$routes->get('/profile', [StudentController::class, 'profile']);

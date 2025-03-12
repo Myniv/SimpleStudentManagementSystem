@@ -18,7 +18,7 @@
                             <a class="btn btn-primary nav-link text-white me-2"
                                 href="<?= base_url('/lecturer/student-grades') ?>">Grades</a>
                             <a class="btn btn-primary nav-link text-white me-2"
-                                href="<?= base_url('/enrollments') ?>">Enrollments</a>
+                                href="<?= base_url('/lecturer/enrollments') ?>">Enrollments</a>
                         <?php endif; ?>
                         <?php if (in_groups('admin')): ?>
                             <a class="btn btn-primary nav-link text-white me-2"
@@ -30,9 +30,10 @@
                         <?php if (in_groups('student')): ?>
                             <a class="btn btn-primary nav-link text-white me-2"
                                 href="<?= base_url('/student/dashboard') ?>">Dashboard</a>
-                            <a class="btn btn-primary nav-link text-white me-2" href="<?= base_url('/profile') ?>">Profile</a>
                             <a class="btn btn-primary nav-link text-white me-2"
-                                href="<?= base_url('/enrollments') ?>">Enrollments</a>
+                                href="<?= base_url('/student/profile') ?>">Profile</a>
+                            <a class="btn btn-primary nav-link text-white me-2"
+                                href="<?= base_url('/student/enrollments') ?>">Enrollments</a>
                         <?php endif; ?>
                         <a class="btn btn-danger nav-link text-white me-2" href="<?= base_url('/logout') ?>">Logout</a>
                     <?php else: ?>

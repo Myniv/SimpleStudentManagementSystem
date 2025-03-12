@@ -93,7 +93,7 @@ class MEnrollment extends Model
 
     public function getAllEnrollment()
     {
-        return $this->select('enrollments.id, students.name AS student_name, courses.name AS course_name, enrollments.academic_year, enrollments.semester, enrollments.status')
+        return $this->select('enrollments.*, students.name AS student_name, courses.name AS course_name')
             ->join('students', 'students.id = enrollments.student_id', 'left')
             ->join('courses', 'courses.id = enrollments.course_id', 'left')
             ->findAll();
