@@ -57,7 +57,7 @@ class AuthController extends MythController
     {
         $userId = user_id();
         if (!$userId) {
-            redirect()->to('/login');
+            return redirect()->to('/login');
         }
 
         $userGroups = $this->groupModel->getGroupsForUser($userId);
