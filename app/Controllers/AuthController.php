@@ -59,7 +59,7 @@ class AuthController extends MythController
         if (!$userId) {
             redirect()->to('/login');
         }
-        
+
         $userGroups = $this->groupModel->getGroupsForUser($userId);
         foreach ($userGroups as $group) {
             if ($group['name'] === 'admin') {
@@ -77,20 +77,5 @@ class AuthController extends MythController
     public function unauthorized()
     {
         return view("auth/unauthorized_page");
-    }
-
-    public function dashboardAdmin()
-    {
-        return view("role/dashboard_admin");
-    }
-
-    public function dashboardLecturer()
-    {
-        return view("role/dashboard_lecturer");
-    }
-
-    public function dashboardStudent()
-    {
-        return view("role/dashboard_student");
     }
 }

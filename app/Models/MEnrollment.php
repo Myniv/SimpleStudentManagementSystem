@@ -81,4 +81,21 @@ class MEnrollment extends Model
     protected $afterFind = [];
     protected $beforeDelete = [];
     protected $afterDelete = [];
+
+    public function getEnrollmentBasedStudent($id)
+    {
+        return $this->select('enrollments.id, students.name AS student_name, courses.name AS course_name, enrollments.academic_year, enrollments.semester, enrollments.status')
+            ->join('students', 'students.id = enrollments.student_id', 'left')
+            ->join('courses', 'courses.id = enrollments.course_id', 'left')
+            ->where('enrollments.student_id', $id)
+            ->findAll();
+    }
+
+    public function getAllEnrollment()
+    {
+        return $this->select('enrollments.id, students.name AS student_name, courses.name AS course_name, enrollments.academic_year, enrollments.semester, enrollments.status')
+            ->join('students', 'students.id = enrollments.student_id', 'left')
+            ->join('courses', 'courses.id = enrollments.course_id', 'left')
+            ->findAll();
+    }
 }

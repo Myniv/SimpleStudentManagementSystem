@@ -31,6 +31,7 @@
                 <div class="mb-3">
                     <label for="course_id" class="form-label">Course</label>
                     <select name="course_id" class="form-select <?= session('errors.course_id') ? 'is-invalid' : '' ?>">
+                        <option value="">Select Courses</option>
                         <?php foreach ($courses as $course): ?>
                             <option value="<?= $course->id ?>" <?= old('course_id', isset($enrollment) ? $enrollment->course_id : '') == $course->name ? 'selected' : '' ?>>
                                 <?= $course->name ?>
@@ -56,15 +57,27 @@
                     <div class="invalid-feedback"><?= session('errors.semester') ?? '' ?></div>
                 </div>
 
+                <?php if (logged_in()): ?>
+                    <?php $isStudent = in_groups('student'); ?>
+                    <?php $autoSelectStatus = $isStudent ? 'On Progress' : ''; ?>
+                <?php endif; ?>
+
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
                     <select name="status" class="form-select <?= session('errors.status') ? 'is-invalid' : '' ?>">
-                        <option value="Pass" <?= old('status', isset($enrollment) ? $enrollment->status : '') == 'Pass' ? 'selected' : '' ?>>Pass</option>
-                        <option value="On Progress" <?= old('status', isset($enrollment) ? $enrollment->status : '') == 'On Progress' ? 'selected' : '' ?>>On Progress</option>
-                        <option value="Failed" <?= old('status', isset($enrollment) ? $enrollment->status : '') == 'Failed' ? 'selected' : '' ?>>Failed</option>
+                        <option value="Pass" <?= old('status', isset($enrollment) ? $enrollment->status : $autoSelectStatus) == 'Pass' ? 'selected' : '' ?> <?= $isStudent ? 'disabled' : '' ?>>
+                            Pass
+                        </option>
+                        <option value="On Progress" <?= old('status', isset($enrollment) ? $enrollment->status : $autoSelectStatus) == 'On Progress' ? 'selected' : '' ?>>
+                            On Progress
+                        </option>
+                        <option value="Failed" <?= old('status', isset($enrollment) ? $enrollment->status : $autoSelectStatus) == 'Failed' ? 'selected' : '' ?> <?= $isStudent ? 'disabled' : '' ?>>
+                            Failed
+                        </option>
                     </select>
                     <div class="invalid-feedback"><?= session('errors.status') ?? '' ?></div>
                 </div>
+
 
                 <button type="submit" class="btn btn-success">Save Enrollment</button>
             </form>

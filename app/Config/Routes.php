@@ -4,6 +4,7 @@ use App\Controllers\AcademicController;
 use App\Controllers\AuthController;
 use App\Controllers\CoursesController;
 use App\Controllers\EnrollmentController;
+use App\Controllers\Home;
 use App\Controllers\StudentController;
 use App\Controllers\UsersController;
 use CodeIgniter\Router\RouteCollection;
@@ -16,6 +17,7 @@ $routes->group(
     'admin',
     ['filter' => 'role:admin'],
     function (RouteCollection $routes) {
+        $routes->get('dashboard', [Home::class, 'dashboard']);
         $routes->get('student', [StudentController::class, 'index']);
         $routes->get('student/show/(:num)', [StudentController::class, 'show/$1']);
         $routes->match(['get', 'post'], 'student/create', [StudentController::class, 'create']);
@@ -28,7 +30,7 @@ $routes->group(
     'lecturer',
     ['filter' => 'role:lecturer'],
     function (RouteCollection $routes) {
-        $routes->get('dashboard', [AuthController::class, 'dashboardLecturer']);
+        $routes->get('dashboard', [Home::class, 'dashboard']);
         $routes->get('courses', [CoursesController::class, 'index']);
         $routes->match(['get', 'post'], 'courses/create', [CoursesController::class, 'create']);
         $routes->match(['get', 'put'], 'courses/update/(:num)', [CoursesController::class, 'update']);
@@ -59,9 +61,8 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 
 $routes->get('unauthorized', [AuthController::class, 'unauthorized'], ['as' => 'unauthorized']);
 
-// $routes->get('admin/dashboard', [AuthController::class, 'dashboardAdmin'], ['filter' => 'role:admin']);
-// $routes->get('lecturer/dashboard', [AuthController::class, 'dashboardLecturer'], ['filter' => 'role:lecturer']);
-// $routes->get('student/dashboard', [AuthController::class, 'dashboardStudent'], ['filter' => 'role:student']);
+
+$routes->get('student/dashboard', [Home::class, 'dashboard'], ['filter' => 'role:student']);
 
 $routes->group(
     'admin/users',

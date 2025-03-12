@@ -22,12 +22,17 @@ class EnrollmentController extends BaseController
     }
     public function index()
     {
-        $data['enrollments'] = $this->enrollmentModel
-            ->select('enrollments.id, students.name AS student_name, courses.name AS course_name, enrollments.academic_year, enrollments.semester, enrollments.status')
-            ->join('students', 'students.id = enrollments.student_id', 'left')
-            ->join('courses', 'courses.id = enrollments.course_id', 'left')
-            ->findAll();
-        ;
+        if (!logged_in()) {
+            return redirect()->to('/login'); // Ensure user is logged in
+        }
+
+        $student = $this->studentModel->where('user_id', user()->id)->first();
+
+        if (!in_array("student", user()->getRoles())) {
+            $data['enrollments'] = $this->enrollmentModel->getAllEnrollment();
+        } else {
+            $data['enrollments'] = $this->enrollmentModel->getEnrollmentBasedStudent($student->id);
+        }
         return view('enrollments/v_enrollment_list', $data);
     }
 
@@ -35,7 +40,14 @@ class EnrollmentController extends BaseController
     {
         $type = $this->request->getMethod();
         if ($type == "GET") {
-            $data["students"] = $this->studentModel->findAll();
+            if (!logged_in()) {
+                return redirect()->to('/login'); // Ensure user is logged in
+            }
+            if (!in_array("student", user()->getRoles())) {
+                $data["students"] = $this->studentModel->findAll();
+            } else {
+                $data['students'] = $this->studentModel->where('user_id', user()->id)->findAll();
+            }
             $data["courses"] = $this->courseModel->findAll();
             return view("enrollments/v_enrollment_form", $data);
         }
@@ -60,7 +72,11 @@ class EnrollmentController extends BaseController
     {
         $type = $this->request->getMethod();
         if ($type == "GET") {
-            $data["students"] = $this->studentModel->findAll();
+            if (!in_array("student", user()->getRoles())) {
+                $data["students"] = $this->studentModel->findAll();
+            } else {
+                $data['students'] = $this->studentModel->where('user_id', user()->id)->findAll();
+            }
             $data["courses"] = $this->courseModel->findAll();
             $data["enrollment"] = $this->enrollmentModel->find($id);
             return view("enrollments/v_enrollment_form", $data);
