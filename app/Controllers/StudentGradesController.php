@@ -57,6 +57,34 @@ class StudentGradesController extends BaseController
         return redirect()->to('/lecturer/student-grades');
     }
 
+    public function update($id)
+    {
+        $type = $this->request->getMethod();
+        if ($type == "GET") {
+            $data['enrollments'] = $this->enrollmentModel->getAllEnrollment();
+            $data['student_grades'] = $this->studentGradesModel->find($id);
+            return view('student_grades/v_student_grades_form', $data);
+        }
+
+        // $enrollments = explode(",", $this->request->getPost('enrollments'));
+        $formData = [
+            'id' => $id,
+            'grade_value' => $this->request->getPost('grade_value'),
+            'completed_at' => $this->request->getPost('completed_at'),
+            // 'enrollment_id' => $enrollments[0],
+            // 'course_id' => $enrollments[1]
+        ];
+
+        if (!$this->enrollmentModel->validate($formData)) {
+            return redirect()->back()->withInput()->with('errors', $this->enrollmentModel->errors());
+        }
+        $studentGrade = new Student_Grades($formData);
+
+
+        $this->studentGradesModel->save($studentGrade);
+        return redirect()->to('/lecturer/student-grades');
+    }
+
     public function delete($id)
     {
         $this->studentGradesModel->delete($id);

@@ -18,16 +18,24 @@
                 <div class="mb-3">
                     <label for="enrollments" class="form-label">Enrollment</label>
                     <select name="enrollments"
-                        class="form-select <?= session('errors.enrollments') ? 'is-invalid' : '' ?>">
-                        <option value="" selected>Select Enrollment</option>
+                        class="form-select <?= session('errors.enrollments') ? 'is-invalid' : '' ?>"
+                        <?= isset($student_grades) ? 'disabled' : '' ?>>
+                        <option value="">Select Enrollment</option>
                         <?php foreach ($enrollments as $enrollment): ?>
-                            <option value="<?= $enrollment->id . "," . $enrollment->course_id ?>">
-                                <?= $enrollment->student_name . " - " . $enrollment->course_name . "-" . $enrollment->course_id ?>
+                            <?php
+                            $selected = "";
+                            if (isset($student_grades) && $student_grades->enrollment_id == $enrollment->id && $student_grades->course_id == $enrollment->course_id) {
+                                $selected = "selected";
+                            }
+                            ?>
+                            <option value="<?= $enrollment->id . "," . $enrollment->course_id ?>" <?= $selected ?>>
+                                <?= $enrollment->student_name . " - " . $enrollment->course_name ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                     <div class="invalid-feedback"><?= session('errors.enrollments') ?? '' ?></div>
                 </div>
+
 
                 <div class="mb-3">
                     <label for="grade_value" class="form-label">Grade Value</label>
@@ -39,10 +47,10 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="completed_at" class="form-label">Grade Value</label>
+                    <label for="completed_at" class="form-label">Completed At</label>
                     <input type="date" name="completed_at"
                         class="form-control <?= session('errors.completed_at') ? 'is-invalid' : '' ?>"
-                        value="<?= old('completed_at', isset($student_grades) ? $student_grades->completed_at : '') ?>"
+                        value="<?= old('completed_at', isset($student_grades) ? date('Y-m-d', strtotime($student_grades->completed_at)) : '') ?>"
                         required>
                     <div class="text-danger"><?= session('errors.completed_at') ?? '' ?></div>
                 </div>
