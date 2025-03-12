@@ -56,6 +56,10 @@ class AuthController extends MythController
     private function redirectBasedOnRole()
     {
         $userId = user_id();
+        if (!$userId) {
+            redirect()->to('/login');
+        }
+        
         $userGroups = $this->groupModel->getGroupsForUser($userId);
         foreach ($userGroups as $group) {
             if ($group['name'] === 'admin') {
