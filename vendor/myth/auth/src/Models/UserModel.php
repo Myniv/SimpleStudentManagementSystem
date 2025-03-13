@@ -33,7 +33,7 @@ class UserModel extends Model
     ];
     protected $useTimestamps = true;
     protected $validationRules = [
-        'id' => 'required|numeric|is_natural_no_zero|is_not_unique[users.id]',
+        // 'id' => 'required|numeric|is_natural_no_zero|is_not_unique[users.id]',
         'email' => 'required|valid_email|is_unique[users.email,id,{id}]',
         'username' => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
         'password_hash' => 'required',
@@ -139,18 +139,18 @@ class UserModel extends Model
         ]);
     }
 
-    public function validate($data): bool
-    {
-        if (!empty($data['id'])) {
-            return parent::validate($data);
-        }
+    // public function validate($data): bool
+    // {
+    //     if (!empty($data['id'])) {
+    //         return parent::validate($data);
+    //     }
 
-        if ($this->validation === null) {
-            $this->validation = \Config\Services::validation();
-        }
+    //     if ($this->validation === null) {
+    //         $this->validation = \Config\Services::validation();
+    //     }
 
-        return $this->validation->setRules($this->validationRulesForInsert)
-            ->run($data);
-    }
+    //     return $this->validation->setRules($this->validationRulesForInsert)
+    //         ->run($data);
+    // }
 
 }
