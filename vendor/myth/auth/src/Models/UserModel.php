@@ -33,12 +33,6 @@ class UserModel extends Model
     ];
     protected $useTimestamps = true;
     protected $validationRules = [
-        // 'id' => 'required|numeric|is_natural_no_zero|is_not_unique[users.id]',
-        'email' => 'required|valid_email|is_unique[users.email,id,{id}]',
-        'username' => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
-        'password_hash' => 'required',
-    ];
-    protected $validationRulesForInsert = [
         'email' => 'required|valid_email|is_unique[users.email,id,{id}]',
         'username' => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
         'password_hash' => 'required',

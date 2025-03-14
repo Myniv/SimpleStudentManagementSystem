@@ -22,11 +22,14 @@ class AuthController extends Controller
      */
     protected $session;
 
+    protected $users;
+
     public function __construct()
     {
         // Most services in this controller require
         // the session to be started - so fire it up!
         $this->session = service('session');
+        $this->users = model(UserModel::class);
 
         $this->config = config('Auth');
         $this->auth = service('authentication');
@@ -143,7 +146,7 @@ class AuthController extends Controller
             return redirect()->back()->withInput()->with('error', lang('Auth.registerDisabled'));
         }
 
-        $users = model(UserModel::class);
+        // $users = model(UserModel::class);
 
         // Validate basics first since some password rules rely on these fields
         $rules = config('Validation')->registrationRules ?? [
@@ -173,11 +176,11 @@ class AuthController extends Controller
 
         // Ensure default group gets assigned if set
         if (!empty($this->config->defaultUserGroup)) {
-            $users = $users->withGroup($this->config->defaultUserGroup);
+            $this->users = $this->users->withGroup($this->config->defaultUserGroup);
         }
 
-        if (!$users->save($user)) {
-            return redirect()->back()->withInput()->with('errors', $users->errors());
+        if (!$this->users->save($user)) {
+            return redirect()->back()->withInput()->with('errors', $this->users->errors());
         }
 
         if ($this->config->requireActivation !== null) {

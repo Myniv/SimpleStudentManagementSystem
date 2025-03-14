@@ -37,9 +37,16 @@ class AuthController extends MythController
     public function attemptRegister()
     {
         $result = parent::attemptRegister();
-
+        if ($this->users->errors()) {
+            return redirect()
+                ->back()
+                ->with('errors', $this->users->errors())
+                ->withInput();
+        }
+        
         $email = $this->request->getPost('email');
         $user = $this->userModel->where('email', $email)->first();
+
 
         if ($user) {
             // $studentGroup = $this->groupModel->where('name', 'admin')->first();
