@@ -158,12 +158,50 @@ class Home extends BaseController
 
         $newName = $userFile->getRandomName();
         // $newName = $userFile->getName();
-        $userFile->move(WRITEPATH . 'uploads', $newName);
-        $filePath = WRITEPATH . 'uploads/' . $newName;
-        // $userFile->move(FCPATH . 'uploads', $newName);
-        // $filePath = FCPATH . 'uploads/' . $newName;
+        // $userFile->move(WRITEPATH . 'uploads', $newName);
+        // $filePath = WRITEPATH . 'uploads/' . $newName;
+
+        $userFile->move(WRITEPATH . 'uploads/original', $newName);
+        $filePath = WRITEPATH . 'uploads/original/' . $newName;
+
+        $this->createImageVersions($filePath, $newName);
+
+
 
         $data = ['uploaded_fileinfo' => new File($filePath)];
         return view('upload_form/upload_success_page', $data);
     }
+
+    private function createImageVersions($filePath, $fileName)
+    {
+
+        $image = service('image');
+
+        $image->withFile($filePath)
+            ->fit(100, 100, 'center')
+            ->save(WRITEPATH . 'uploads/thumbnail/' . $fileName);
+
+
+        // $image->withFile($filePath)
+        //     ->fit(300, 300, 'center')
+        //     ->save(WRITEPATH . 'uploads/medium/' . $fileName);
+
+        // Jika ingin menggunakan resize (mempertahankan ratio) daripada fit:
+
+        $image->withFile($filePath)
+            ->resize(300, 300, true, 'height')
+            ->save(WRITEPATH . 'uploads/medium/' . $fileName);
+
+        $image->withFile($filePath)
+            ->text('Copyright 2017 My Photo Co', [
+                'color' => '#fff',
+                'opacity' => 0.5,
+                'withShadow' => true,
+                'hAlign' => 'center',
+                'vAlign' => 'bottom',
+                'fontSize' => 20,
+            ])
+            ->save(WRITEPATH . 'uploads/watermark/' . $fileName);
+    }
+
 }
