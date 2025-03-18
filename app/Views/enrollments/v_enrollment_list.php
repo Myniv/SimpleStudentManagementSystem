@@ -3,8 +3,8 @@
 
 <h2 class="text-center my-4">Enrollment List</h2>
 
-<?php if (in_groups('lecturer')): ?>
-    <a class="btn btn-primary mb-2" href="/lecturer/enrollments/create">Add Enrollment</a>
+<?php if (in_groups('lecturer') || in_groups('student')): ?>
+    <a class="btn btn-primary mb-2" href="/enrollments/create">Add Enrollment</a>
 <?php endif; ?>
 
 <table class="table table-bordered table-striped">
@@ -33,7 +33,8 @@
                 <?php if (in_groups('lecturer')): ?>
                     <td>
                         <a href="/lecturer/enrollments/update/<?= $enrollment->id; ?>" class="btn btn-primary btn-sm">Edit</a>
-                        <form action="<?= base_url("/lecturerenrollments/delete/{$enrollment->id}") ?>" method="post" class="d-inline">
+                        <form action="<?= base_url("/lecturerenrollments/delete/{$enrollment->id}") ?>" method="post"
+                            class="d-inline">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="btn btn-danger btn-sm"
                                 onclick="return confirm('Are you sure want to delete this student?');">

@@ -6,9 +6,16 @@
         <div class="card-header bg-primary text-white">
             <h4 class="mb-3"><?= isset($enrollment) ? 'Edit Enrollment' : 'Add Enrollment'; ?></h4>
         </div>
+
+        <?php if (session()->has('error')): ?>
+            <div class="alert alert-danger">
+                <?= session('error') ?>
+            </div>
+        <?php endif; ?>
+
         <div class="card-body">
             <form
-                action="<?= isset($enrollment) ? base_url('lecturer/enrollments/update/' . $enrollment->id) : base_url('lecturer/enrollments/create') ?>"
+                action="<?= isset($enrollment) ? base_url('enrollments/update/' . $enrollment->id) : base_url('enrollments/create') ?>"
                 method="post">
                 <?= csrf_field() ?>
                 <?php if (isset($enrollment)): ?>

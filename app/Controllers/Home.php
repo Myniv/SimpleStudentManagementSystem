@@ -26,7 +26,7 @@ class Home extends BaseController
         }
 
         // $this->testEmailSend();
-        $this->testEmailWithTemplate();
+        // $this->testEmailWithTemplate();
 
         $data = [
             'name' => user()->username,
@@ -161,8 +161,8 @@ class Home extends BaseController
         // $userFile->move(WRITEPATH . 'uploads', $newName);
         // $filePath = WRITEPATH . 'uploads/' . $newName;
 
-        $userFile->move(WRITEPATH . 'uploads/original', $newName);
-        $filePath = WRITEPATH . 'uploads/original/' . $newName;
+        $userFile->move(WRITEPATH . 'uploads/original', "original_" . $newName);
+        $filePath = WRITEPATH . 'uploads/original/' . "original_" . $newName;
 
         $this->createImageVersions($filePath, $newName);
 
@@ -179,7 +179,7 @@ class Home extends BaseController
 
         $image->withFile($filePath)
             ->fit(100, 100, 'center')
-            ->save(WRITEPATH . 'uploads/thumbnail/' . $fileName);
+            ->save(WRITEPATH . 'uploads/thumbnail/' . "thumbnail_" . $fileName);
 
 
         // $image->withFile($filePath)
@@ -187,10 +187,9 @@ class Home extends BaseController
         //     ->save(WRITEPATH . 'uploads/medium/' . $fileName);
 
         // Jika ingin menggunakan resize (mempertahankan ratio) daripada fit:
-
         $image->withFile($filePath)
             ->resize(300, 300, true, 'height')
-            ->save(WRITEPATH . 'uploads/medium/' . $fileName);
+            ->save(WRITEPATH . 'uploads/medium/' . "medium_" . $fileName);
 
         $image->withFile($filePath)
             ->text('Copyright 2017 My Photo Co', [
@@ -199,9 +198,9 @@ class Home extends BaseController
                 'withShadow' => true,
                 'hAlign' => 'center',
                 'vAlign' => 'bottom',
-                'fontSize' => 20,
+                'fontSize' => 50,
             ])
-            ->save(WRITEPATH . 'uploads/watermark/' . $fileName);
+            ->save(WRITEPATH . 'uploads/watermark/' . "watermark_" . $fileName);
     }
 
 }

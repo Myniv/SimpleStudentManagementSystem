@@ -19,9 +19,10 @@
         }
 
         .header {
-            background-color: #f5f5f5;
+            background-color: rgb(1, 15, 113);
             padding: 10px;
             text-align: center;
+            color: white;
         }
 
         .content {
@@ -29,10 +30,11 @@
         }
 
         .footer {
-            background-color: #f5f5f5;
+            background-color: rgb(1, 15, 113);
             padding: 10px;
             text-align: center;
             font-size: 12px;
+            color: white;
         }
     </style>
 </head>
@@ -40,7 +42,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Your Message</h1>
+            <h1><?= $title ?></h1>
         </div>
         <div class="content">
             <h2>Halo, <?= $name ?></h2>
@@ -49,7 +51,7 @@
         </div>
         <div class="card mb-4">
             <div class="card-header">
-                <strong>Available feature :</strong>
+                <strong><?= $features_title ?></strong>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled">
@@ -61,7 +63,8 @@
         </div>
         <div class="footer">
             <p>This email is automatically sended. Please do not reply this email</p>
-            <p>$copy; <?= date('Y') ?> Myniv</p>
+            <p>Copyright &copy; <?= date('Y') ?> Myniv</p>
         </div>
 </body>
+
 </html>

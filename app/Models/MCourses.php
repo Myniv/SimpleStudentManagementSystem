@@ -110,4 +110,21 @@ class MCourses extends Model
 
         return $result;
     }
+
+    public function getCourseBasedOnEnrollmentId($id)
+    {
+        return $this->select('courses.*')
+            ->join('enrollments', 'enrollments.course_id = courses.id')
+            ->where('enrollments.id', $id)
+            ->first();
+    }
+
+    public function getNotDuplicateCourses()
+    {
+        return $this->select('courses.*')
+            ->join('enrollments', 'enrollments.course_id = courses.id')
+            ->join('students', 'students.id = enrollments.student_id')
+            ->where('enrollments.id IS NULL')
+            ->findAll();
+    }
 }

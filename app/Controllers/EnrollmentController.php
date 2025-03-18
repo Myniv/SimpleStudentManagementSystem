@@ -64,7 +64,42 @@ class EnrollmentController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->enrollmentModel->errors());
         }
 
+        $existingEnrollment = $this->enrollmentModel
+            ->where('student_id', $formData['student_id'])
+            ->where('course_id', $formData['course_id'])
+            ->first();
+
+        if ($existingEnrollment) {
+            return redirect()->back()->withInput()->with('error', 'You are already enrolled in this course.');
+        }
+
         $this->enrollmentModel->save($formData);
+        if (in_array("student", user()->getRoles())) {
+            $enrollmentsId = $this->enrollmentModel->getInsertID();
+            $student = $this->studentModel->where('user_id', user()->id)->first();
+            $course = $this->courseModel->getCourseBasedOnEnrollmentId($enrollmentsId);
+            $enrollments = $this->enrollmentModel->find($enrollmentsId);
+
+            //send email
+            $email = service('email');
+            $email->setFrom('mulyanan@solecode.id');
+            $email->setTo(user()->email);
+            $email->setSubject('Course Registration Notification');
+            $data = [
+                'title' => 'Course Registration',
+                'name' => $student->name . ' (' . $student->student_id . ')',
+                'content' => '',
+                'features_title' => 'Course Details',
+                'features' => [
+                    'Courses : ' . $course->name . ' (' . $course->code . ')',
+                    'Credits Hours : ' . $course->credits,
+                    'Registration At : ' . $enrollments->created_at
+                ],
+            ];
+            $email->setMessage(view('email/email_template', $data));
+            $email->send();
+        }
+
         return redirect()->to('/enrollments');
     }
 

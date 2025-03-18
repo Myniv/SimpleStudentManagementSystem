@@ -42,23 +42,23 @@ $routes->group(
         $routes->match(['get', 'put'], 'student-grades/update/(:num)', [StudentGradesController::class, 'update']);
         $routes->delete('student-grades/delete/(:num)', [StudentGradesController::class, 'delete/$1']);
 
-        $routes->get('enrollments', [EnrollmentController::class, 'index']);
-        $routes->match(['get', 'post'], 'enrollments/create', [EnrollmentController::class, 'create']);
-        $routes->match(['get', 'put'], 'enrollments/update/(:num)', [EnrollmentController::class, 'update']);
-        $routes->delete('enrollments/delete/(:num)', [EnrollmentController::class, 'delete/$1']);
+        // $routes->get('enrollments', [EnrollmentController::class, 'index']);
+        // $routes->match(['get', 'post'], 'enrollments/create', [EnrollmentController::class, 'create']);
+        // $routes->match(['get', 'put'], 'enrollments/update/(:num)', [EnrollmentController::class, 'update']);
+        // $routes->delete('enrollments/delete/(:num)', [EnrollmentController::class, 'delete/$1']);
     }
 );
 
-// $routes->group(
-//     'enrollments',
-//     ['filter' => 'role:student,lecturer'],
-//     function (RouteCollection $routes) {
-//         $routes->get('/', [EnrollmentController::class, 'index']);
-//         $routes->match(['get', 'post'], 'create', [EnrollmentController::class, 'create']);
-//         $routes->match(['get', 'put'], 'update/(:num)', [EnrollmentController::class, 'update']);
-//         $routes->delete('delete/(:num)', [EnrollmentController::class, 'delete/$1']);
-//     }
-// );
+$routes->group(
+    'enrollments',
+    ['filter' => 'role:student,lecturer'],
+    function (RouteCollection $routes) {
+        $routes->get('/', [EnrollmentController::class, 'index']);
+        $routes->match(['get', 'post'], 'create', [EnrollmentController::class, 'create']);
+        $routes->match(['get', 'put'], 'update/(:num)', [EnrollmentController::class, 'update']);
+        $routes->delete('delete/(:num)', [EnrollmentController::class, 'delete/$1']);
+    }
+);
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     // Registrasi

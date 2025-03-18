@@ -98,4 +98,5 @@ class MEnrollment extends Model
             ->join('courses', 'courses.id = enrollments.course_id', 'left')
             ->findAll();
     }
+
 }
