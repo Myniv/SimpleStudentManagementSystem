@@ -99,3 +99,5 @@ $routes->group(
         $routes->delete('delete/(:num)', [UsersController::class, 'delete/$1']);
     }
 );
+
+$routes->match(['get', 'post'], 'upload', [Home::class, 'testUploadFiles']);

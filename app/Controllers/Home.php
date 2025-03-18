@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\Files\File;
 use Myth\Auth\Models\GroupModel;
 use Myth\Auth\Models\UserModel;
 
@@ -100,5 +101,69 @@ class Home extends BaseController
         if ($email->send()) {
             echo 'Email sent successfully';
         }
+    }
+
+    public function testUploadFiles()
+    {
+        $type = $this->request->getMethod();
+        if ($type == "GET") {
+            return view('upload_form/upload_form_test');
+        }
+
+        //Validation rules for doc
+        // $validationRules = [
+        //     'userfile' => [
+        //         'label' => 'Dokumen',
+        //         'rules' => [
+        //             'uploaded[userfile]',
+        //             'mime_in[userfile,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]',
+        //             'max_size[userfile,5120]', // 5MB dalam KB (5 * 1024)
+        //         ],
+        //         'errors' => [
+        //             'uploaded' => 'Silakan pilih file untuk diunggah',
+        //             'mime_in' => 'File harus berformat PDF, DOC, atau DOCX',
+        //             'max_size' => 'Ukuran file tidak boleh melebihi 5MB'
+        //         ]
+        //     ]
+        // ];
+
+        //Validation rules for image
+        $validationRules = [
+            'userfile' => [
+                'label' => 'Gambar',
+                'rules' => [
+                    'uploaded[userfile]',
+                    'is_image[userfile]',
+                    'mime_in[userfile,image/jpg,image/jpeg,image/png,image/gif]',
+                    'max_size[userfile,5120]', // 5MB dalam KB (5 * 1024)
+                ],
+                'errors' => [
+                    'uploaded' => 'Silakan pilih file gambar untuk diunggah',
+                    'is_image' => 'File harus berupa gambar',
+                    'mime_in' => 'File harus berformat JPG, JPEG, PNG, atau GIF',
+                    'max_size' => 'Ukuran file tidak boleh melebihi 5MB'
+                ]
+            ]
+        ];
+
+        if (!$this->validate($validationRules)) {
+            return view('upload_form/upload_form_test', ['errors' => $this->validator->getErrors()]);
+        }
+
+
+        $userFile = $this->request->getFile('userfile');
+        // if (!$userFile->isValid()) {
+        //     return view('upload_form/upload_form_test', ['errors' => $userFile->getErrorString()]);
+        // }
+
+        $newName = $userFile->getRandomName();
+        // $newName = $userFile->getName();
+        $userFile->move(WRITEPATH . 'uploads', $newName);
+        $filePath = WRITEPATH . 'uploads/' . $newName;
+        // $userFile->move(FCPATH . 'uploads', $newName);
+        // $filePath = FCPATH . 'uploads/' . $newName;
+
+        $data = ['uploaded_fileinfo' => new File($filePath)];
+        return view('upload_form/upload_success_page', $data);
     }
 }
