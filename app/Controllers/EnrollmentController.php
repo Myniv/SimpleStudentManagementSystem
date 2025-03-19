@@ -130,6 +130,7 @@ class EnrollmentController extends BaseController
                 $data['students'] = $this->studentModel->where('user_id', user()->id)->findAll();
             }
             $data["courses"] = $this->courseModel->findAll();
+
             $data["enrollment"] = $this->enrollmentModel->find($id);
             return view("enrollments/v_enrollment_form", $data);
         }

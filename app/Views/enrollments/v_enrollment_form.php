@@ -32,27 +32,29 @@
 
                 <div class="mb-3">
                     <label for="student_id" class="form-label">Student</label>
-                    <select name="student_id"
-                        class="form-select <?= session('errors.student_id') ? 'is-invalid' : '' ?>">
+                    <select class="form-select <?= session('errors.student_id') ? 'is-invalid' : '' ?>" disabled>
                         <?php foreach ($students as $student): ?>
-                            <option value="<?= $student->id ?>" <?= old('student_id', isset($enrollment) ? $enrollment->student_id : '') == $student->name ? 'selected' : '' ?>>
+                            <option value="<?= $student->id ?>" <?= old('student_id', isset($enrollment) ? $enrollment->student_id : '') == $student->id ? 'selected' : '' ?>>
                                 <?= $student->name ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
+                    <input type="hidden" name="student_id"
+                        value="<?= old('student_id', isset($enrollment) ? $enrollment->student_id : '') ?>">
                     <div class="invalid-feedback"><?= session('errors.student_id') ?? '' ?></div>
                 </div>
 
                 <div class="mb-3">
                     <label for="course_id" class="form-label">Course</label>
-                    <select name="course_id" class="form-select <?= session('errors.course_id') ? 'is-invalid' : '' ?>">
-                        <option value="">Select Courses</option>
+                    <select class="form-select <?= session('errors.course_id') ? 'is-invalid' : '' ?>" disabled>
                         <?php foreach ($courses as $course): ?>
-                            <option value="<?= $course->id ?>" <?= old('course_id', isset($enrollment) ? $enrollment->course_id : '') == $course->name ? 'selected' : '' ?>>
+                            <option value="<?= $course->id ?>" <?= old('course_id', isset($enrollment) ? $enrollment->course_id : '') == $course->id ? 'selected' : '' ?>>
                                 <?= $course->name ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
+                    <input type="hidden" name="course_id"
+                        value="<?= old('course_id', isset($enrollment) ? $enrollment->course_id : '') ?>">
                     <div class="invalid-feedback"><?= session('errors.course_id') ?? '' ?></div>
                 </div>
 
