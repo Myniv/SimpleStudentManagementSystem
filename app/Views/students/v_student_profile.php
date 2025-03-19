@@ -16,10 +16,8 @@
                 {!high_school_diploma!}
             </div>
 
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                data-bs-target="#uploadDiplomaModal">
-                Upload Diploma
-            </button>
+            
+            {!button_upload_diploma!}
         </div>
     </div>
 </div>

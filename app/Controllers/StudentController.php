@@ -137,6 +137,14 @@ class StudentController extends BaseController
         // $student['grade_cell'] = view_cell('LatestGradesCell', ['course' => $student['courses'], 'filter' => false]);
         $student['profile_picture'] = base_url("iconOrang.png");
 
+        if (empty($student['high_school_diploma'])) {
+            $student['high_school_diploma'] = "No Diploma Uploaded";
+        } else {
+            $encodedFilename = base64_encode($student['high_school_diploma']);
+            $student['high_school_diploma'] = '<a href="' . base_url('student/profile/view-diploma?file=' . $encodedFilename) . '" target="_blank">View Diploma</a>';
+        }
+
+        $student['button_upload_diploma'] = '';
 
         $data = $student;
         // print_r($students);
@@ -171,6 +179,10 @@ class StudentController extends BaseController
             $encodedFilename = base64_encode($student['high_school_diploma']);
             $student['high_school_diploma'] = '<a href="' . base_url('student/profile/view-diploma?file=' . $encodedFilename) . '" target="_blank">View Diploma</a>';
         }
+        $student['button_upload_diploma'] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                data-bs-target="#uploadDiplomaModal">
+                Upload Diploma
+            </button>';
 
         $student['validation_errors'] = session('validation_errors') ? implode('<br>', session('validation_errors')) : '';
         $student['success'] = session('success') ?? '';
