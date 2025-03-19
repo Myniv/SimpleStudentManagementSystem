@@ -87,7 +87,7 @@ $routes->group(
         $routes->get('enrollments', [EnrollmentController::class, 'index']);
     }
 );
-$routes->get('student/profile/view-diploma', [StudentController::class, 'viewDiploma']);
+$routes->get('student/profile/view-diploma', [StudentController::class, 'viewDiploma'], ['filter' => 'role:student,admin']);
 
 $routes->group(
     'admin/users',

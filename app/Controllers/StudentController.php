@@ -140,8 +140,7 @@ class StudentController extends BaseController
         if (empty($student['high_school_diploma'])) {
             $student['high_school_diploma'] = "No Diploma Uploaded";
         } else {
-            $encodedFilename = base64_encode($student['high_school_diploma']);
-            $student['high_school_diploma'] = '<a href="' . base_url('student/profile/view-diploma?file=' . $encodedFilename) . '" target="_blank">View Diploma</a>';
+            $student['high_school_diploma'] = '<a href="' . base_url('student/profile/view-diploma?file=' . $student['high_school_diploma']) . '" target="_blank">View Diploma</a>';
         }
 
         $student['button_upload_diploma'] = '';
@@ -176,8 +175,7 @@ class StudentController extends BaseController
         if (empty($student['high_school_diploma'])) {
             $student['high_school_diploma'] = "No Diploma Uploaded";
         } else {
-            $encodedFilename = base64_encode($student['high_school_diploma']);
-            $student['high_school_diploma'] = '<a href="' . base_url('student/profile/view-diploma?file=' . $encodedFilename) . '" target="_blank">View Diploma</a>';
+            $student['high_school_diploma'] = '<a href="' . base_url('student/profile/view-diploma?file=' . $student['high_school_diploma']) . '" target="_blank">View Diploma</a>';
         }
         $student['button_upload_diploma'] = '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                 data-bs-target="#uploadDiplomaModal">
@@ -307,19 +305,11 @@ class StudentController extends BaseController
 
     public function viewDiploma()
     {
-        $encodedFilePath = $this->request->getGet('file');
-
-        // Decode the Base64 encoded file path
-        $filePath = base64_decode($encodedFilePath);
-
-        // Prevent directory traversal attacks
+        $filePath = $this->request->getGet('file');
         $filePath = basename($filePath);
 
-        $fullPath = WRITEPATH . 'uploads/diplomas/' . $filePath;
 
-        if (!file_exists($fullPath)) {
-            return $this->response->setStatusCode(404)->setBody("File not found");
-        }
+        $fullPath = WRITEPATH . 'uploads/diplomas/' . $filePath;
 
         return $this->response->setHeader('Content-Type', 'application/pdf')
             ->setHeader('Content-Disposition', 'inline; filename="' . $filePath . '"')
