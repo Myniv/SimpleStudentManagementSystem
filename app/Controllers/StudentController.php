@@ -165,16 +165,17 @@ class StudentController extends BaseController
         $student['status_cell'] = view_cell('AcademicStatusCell', ['status' => $student['academic_status']]);
         $student['profile_picture'] = base_url("iconOrang.png");
 
-        $student['courses'] = $this->enrollmentModel->getStudentCoursesAndGrades($student['id']);
+        if (empty($student['high_school_diploma'])) {
+            $student['high_school_diploma'] = "No Diploma Uploaded";
+        } else {
+            $student['high_school_diploma'] = '<a href="javascript:void(0);" onclick="viewDiploma(\'' . $student['high_school_diploma'] . '\');">View Diploma</a>';
+        }
 
-        $data = $student;
-        // print_r($students);
+        $student['validation_errors'] = session('validation_errors') ?? '';
+        $student['success'] = session('success') ?? '';
+        $student['modal_error'] = session('modalError') ? 'true' : 'false';
 
-        $data['content'] = $parser->setData($data)
-            ->render(
-                "students/v_student_profile",
-                // ['cache' => 3600, 'cache_name' => 'student_profile']
-            );
+        $data['content'] = $parser->setData($student)->render("students/v_student_profile");
 
         return view('components/v_parser_layout', $data);
     }
@@ -241,4 +242,53 @@ class StudentController extends BaseController
         return redirect()->to('/admin/student');
     }
 
+    public function uploadDiploma()
+    {
+        $user = user()->username;
+        $newUser = $this->userModel->where('username', $user)->first();
+
+        $student = $this->studentModel
+            ->where('user_id', $newUser->id)
+            ->first();
+
+        $file = $this->request->getFile('high_school_diploma');
+
+        $validationRules = [
+            'high_school_diploma' => [
+                'label' => 'Diploma',
+                'rules' => 'uploaded[high_school_diploma]|mime_in[high_school_diploma,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]|max_size[high_school_diploma,5120]',
+                'errors' => [
+                    'uploaded' => 'Please select a file to upload.',
+                    'mime_in' => 'File must be in PDF, DOC, or DOCX format.',
+                    'max_size' => 'File size must not exceed 5MB.'
+                ]
+            ]
+        ];
+
+        if (!$this->validate($validationRules)) {
+            return redirect()->back()->with('modalError', true)
+                ->with('validation_errors', $this->validator->getErrors());
+        }
+
+        // Ensure directory exists
+        $uploadPath = WRITEPATH . 'uploads/diplomas/';
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        // Save file
+        $newName = $student->student_id . "_" . date('Y-m-d_H-i-s') . "." . $file->getExtension();
+        $file->move($uploadPath, $newName);
+
+        $filePath = 'uploads/diplomas/' . $newName;
+
+        $updateData =
+            [
+                'id' => $student->id,
+                'high_school_diploma' => $filePath,
+            ];
+        $this->studentModel->save($updateData);
+
+        return redirect()->back()->with('success', 'Diploma uploaded successfully.');
+    }
 }

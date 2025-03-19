@@ -16,6 +16,7 @@ class Student extends Entity
         "entry_year"=>null,
         "gpa"=>null,
         "user_id"=>null,
+        "high_school_diploma" => null,
         "created_at" => null,
         "updated_at"=> null,
     ];
