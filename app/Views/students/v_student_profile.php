@@ -15,14 +15,12 @@
             <div class="mb-3">
                 {!high_school_diploma!}
             </div>
-
-            
             {!button_upload_diploma!}
+            <p class="text-success">{success}</p>
         </div>
     </div>
 </div>
 
-<!-- Upload Diploma Modal -->
 <div class="modal fade" id="uploadDiplomaModal" tabindex="-1" aria-labelledby="uploadDiplomaModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -35,7 +33,6 @@
                 <div class="modal-body">
 
                     <p class="text-danger">{validation_errors}</p>
-                    <p class="text-success">{success}</p>
 
                     <div class="mb-3">
                         <label for="diploma_file" class="form-label">Choose File</label>
@@ -72,13 +69,9 @@
             var fileType = file.type;
             var fileURL = URL.createObjectURL(file);
 
-            // Only allow preview for PDFs
             if (fileType === "application/pdf") {
                 document.getElementById("diplomaPreview").src = fileURL;
                 document.getElementById("previewContainer").style.display = "block";
-            } else {
-                alert("Preview is only available for PDF files. The file will still be uploaded.");
-                document.getElementById("previewContainer").style.display = "none";
             }
         }
     });
