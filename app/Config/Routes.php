@@ -83,6 +83,7 @@ $routes->group(
     function ($routes) {
         $routes->get('profile', [StudentController::class, 'profile']);
         $routes->post('profile/upload-diploma', [StudentController::class, 'uploadDiploma']);
+        $routes->get('profile/view-diploma', [StudentController::class, 'viewDiploma']);
         $routes->get('dashboard', [Home::class, 'dashboard']);
         $routes->get('enrollments', [EnrollmentController::class, 'index']);
     }

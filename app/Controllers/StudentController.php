@@ -168,10 +168,11 @@ class StudentController extends BaseController
         if (empty($student['high_school_diploma'])) {
             $student['high_school_diploma'] = "No Diploma Uploaded";
         } else {
-            $student['high_school_diploma'] = '<a href="javascript:void(0);" onclick="viewDiploma(\'' . $student['high_school_diploma'] . '\');">View Diploma</a>';
+            $encodedFilename = base64_encode($student['high_school_diploma']);
+            $student['high_school_diploma'] = '<a href="' . base_url('student/profile/view-diploma?file=' . $encodedFilename) . '" target="_blank">View Diploma</a>';
         }
 
-        $student['validation_errors'] = session('validation_errors') ?? '';
+        $student['validation_errors'] = session('validation_errors') ? implode('<br>', session('validation_errors')) : '';
         $student['success'] = session('success') ?? '';
         $student['modal_error'] = session('modalError') ? 'true' : 'false';
 
@@ -291,4 +292,28 @@ class StudentController extends BaseController
 
         return redirect()->back()->with('success', 'Diploma uploaded successfully.');
     }
+
+    public function viewDiploma()
+    {
+        $encodedFilePath = $this->request->getGet('file');
+
+        // Decode the Base64 encoded file path
+        $filePath = base64_decode($encodedFilePath);
+
+        // Prevent directory traversal attacks
+        $filePath = basename($filePath);
+
+        $fullPath = WRITEPATH . 'uploads/diplomas/' . $filePath;
+
+        if (!file_exists($fullPath)) {
+            return $this->response->setStatusCode(404)->setBody("File not found");
+        }
+
+        return $this->response->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'inline; filename="' . $filePath . '"')
+            ->setBody(file_get_contents($fullPath));
+    }
+
 }
+
+
