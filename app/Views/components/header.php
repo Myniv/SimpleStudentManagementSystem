@@ -18,7 +18,7 @@
                             <a class="btn btn-primary nav-link text-white me-2"
                                 href="<?= base_url('/lecturer/student-grades') ?>">Grades</a>
                             <a class="btn btn-primary nav-link text-white me-2"
-                                href="<?= base_url('/lecturer/enrollments') ?>">Enrollments</a>
+                                href="<?= base_url('/enrollments') ?>">Enrollments</a>
                         <?php endif; ?>
                         <?php if (in_groups('admin')): ?>
                             <a class="btn btn-primary nav-link text-white me-2"

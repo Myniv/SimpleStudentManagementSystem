@@ -13,6 +13,14 @@
             </div>
         <?php endif; ?>
 
+        <?php if (session()->has('errorGrades')): ?>
+            <div class="alert alert-danger">
+                <?php foreach (session('errorGrades') as $error): ?>
+                    <li><?= $error; ?></li>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
         <div class="card-body">
             <form
                 action="<?= isset($enrollment) ? base_url('enrollments/update/' . $enrollment->id) : base_url('enrollments/create') ?>"

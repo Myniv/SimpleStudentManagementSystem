@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\MCourses;
 use App\Models\MEnrollment;
 use App\Models\MStudent;
+use App\Models\MStudentGrades;
 use CodeIgniter\HTTP\ResponseInterface;
 use function PHPUnit\Framework\returnArgument;
 
@@ -13,12 +14,14 @@ class EnrollmentController extends BaseController
 {
     private $enrollmentModel;
     private $studentModel;
+    private $studentGradesModel;
     private $courseModel;
     public function __construct()
     {
         $this->enrollmentModel = new MEnrollment();
         $this->studentModel = new MStudent();
         $this->courseModel = new MCourses();
+        $this->studentGradesModel = new MStudentGrades();
     }
     public function index()
     {
@@ -29,9 +32,9 @@ class EnrollmentController extends BaseController
         $student = $this->studentModel->where('user_id', user()->id)->first();
 
         if (!in_array("student", user()->getRoles())) {
-            $data['enrollments'] = $this->enrollmentModel->getAllEnrollment();
+            $data['enrollments'] = $this->enrollmentModel->getAllStudentCoursesAndGrades();
         } else {
-            $data['enrollments'] = $this->enrollmentModel->getEnrollmentBasedStudent($student->id);
+            $data['enrollments'] = $this->enrollmentModel->getStudentCoursesAndGrades($student->id);
         }
         return view('enrollments/v_enrollment_list', $data);
     }
@@ -51,10 +54,11 @@ class EnrollmentController extends BaseController
             $data["courses"] = $this->courseModel->findAll();
             return view("enrollments/v_enrollment_form", $data);
         }
-
+        
+        $courseId = $this->request->getPost('course_id');
         $formData = [
             'student_id' => $this->request->getPost('student_id'),
-            'course_id' => $this->request->getPost('course_id'),
+            'course_id' => $courseId,
             "academic_year" => $this->request->getPost("academic_year"),
             "semester" => $this->request->getPost("semester"),
             "status" => $this->request->getPost("status"),
@@ -74,8 +78,21 @@ class EnrollmentController extends BaseController
         }
 
         $this->enrollmentModel->save($formData);
+        $enrollmentsId = $this->enrollmentModel->getInsertID();
+
+        $studentGradesData = [
+            'enrollment_id' => $enrollmentsId,
+            'course_id' => $formData['course_id'],
+            'grade_value' => null,
+            'grade_letter' => null,
+            'status' => null,
+        ];
+        // dd($studentGradesData);
+        if(!$this->studentGradesModel->save($studentGradesData)){
+            return redirect()->back()->withInput()->with('errorGrades', $this->studentGradesModel->errors());
+        }
+
         if (in_array("student", user()->getRoles())) {
-            $enrollmentsId = $this->enrollmentModel->getInsertID();
             $student = $this->studentModel->where('user_id', user()->id)->first();
             $course = $this->courseModel->getCourseBasedOnEnrollmentId($enrollmentsId);
             $enrollments = $this->enrollmentModel->find($enrollmentsId);

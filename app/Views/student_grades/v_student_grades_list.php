@@ -24,8 +24,9 @@
                 <td><?= $student_grade->course_name ?></td>
                 <td><?= $student_grade->grade_letter && $student_grade->grade_value ? $student_grade->grade_value . ' / ' . $student_grade->grade_letter : 'N/A' ?>
                 </td>
-                <td><?= $student_grade->status ?></td>
-                <td><?= $student_grade->completed_at->humanize() ?></td>
+                <td><?= $student_grade->status ?? 'N/A' ?></td>
+                <td><?= !empty($student_grade->completed_at) ? $student_grade->completed_at->humanize() : 'N/A' ?>
+                </td>
                 <td>
                     <a href="/lecturer/student-grades/update/<?= $student_grade->id; ?>"
                         class="btn btn-primary btn-sm">Edit</a>

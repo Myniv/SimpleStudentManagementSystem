@@ -99,4 +99,27 @@ class MEnrollment extends Model
             ->findAll();
     }
 
+    public function getStudentCoursesAndGrades($studentId)
+    {
+        return $this
+            ->select('enrollments.*, students.name AS student_name, courses.name AS course_name, 
+        courses.code AS course_code, courses.credits, student_grades.grade_letter AS grade_letter')
+            ->join('students', 'students.id = enrollments.student_id')
+            ->join('courses', 'courses.id = enrollments.course_id')
+            ->join('student_grades', 'student_grades.enrollment_id = enrollments.id', 'left')
+            ->where('students.id', $studentId)
+            ->findAll();
+    }
+    public function getAllStudentCoursesAndGrades()
+    {
+        return $this
+            ->select('enrollments.*, students.name AS student_name, courses.name AS course_name, 
+        courses.code AS course_code, courses.credits, student_grades.grade_letter AS grade_letter')
+            ->join('students', 'students.id = enrollments.student_id')
+            ->join('courses', 'courses.id = enrollments.course_id')
+            ->join('student_grades', 'student_grades.enrollment_id = enrollments.id', 'left')
+            ->findAll();
+    }
+
+
 }

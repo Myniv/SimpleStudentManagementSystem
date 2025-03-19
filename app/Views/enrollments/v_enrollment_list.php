@@ -16,6 +16,7 @@
             <th>Academic Year</th>
             <th>Semester</th>
             <th>Status</th>
+            <th>Grades</th>
             <?php if (in_groups('lecturer')): ?>
                 <th>Action</th>
             <?php endif; ?>
@@ -30,10 +31,11 @@
                 <td><?= $enrollment->academic_year ?></td>
                 <td><?= $enrollment->semester ?></td>
                 <td><?= $enrollment->status ?></td>
+                <td><?= $enrollment->grade_letter ?? 'N/A' ?></td>
                 <?php if (in_groups('lecturer')): ?>
                     <td>
-                        <a href="/lecturer/enrollments/update/<?= $enrollment->id; ?>" class="btn btn-primary btn-sm">Edit</a>
-                        <form action="<?= base_url("/lecturerenrollments/delete/{$enrollment->id}") ?>" method="post"
+                        <a href="/enrollments/update/<?= $enrollment->id; ?>" class="btn btn-primary btn-sm">Edit</a>
+                        <form action="<?= base_url("/enrollments/delete/{$enrollment->id}") ?>" method="post"
                             class="d-inline">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="btn btn-danger btn-sm"

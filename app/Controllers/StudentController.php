@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\StudentDb;
 use App\Libraries\DataParams;
+use App\Models\MEnrollment;
 use App\Models\MStudent;
 use CodeIgniter\HTTP\ResponseInterface;
 use Myth\Auth\Models\UserModel;
@@ -12,12 +13,14 @@ use Myth\Auth\Models\UserModel;
 class StudentController extends BaseController
 {
     private $studentModel;
+    private $enrollmentModel;
     protected $userModel;
 
     public function __construct()
     {
         $this->userModel = new UserModel();
         $this->studentModel = new MStudent();
+        $this->enrollmentModel = new MEnrollment();
     }
 
     public function index()
@@ -160,9 +163,9 @@ class StudentController extends BaseController
 
         $student = $getStudent->toArray();
         $student['status_cell'] = view_cell('AcademicStatusCell', ['status' => $student['academic_status']]);
-        // $student['grade_cell'] = view_cell('LatestGradesCell', ['course' => $student['courses'], 'filter' => false]);
         $student['profile_picture'] = base_url("iconOrang.png");
 
+        $student['courses'] = $this->enrollmentModel->getStudentCoursesAndGrades($student['id']);
 
         $data = $student;
         // print_r($students);

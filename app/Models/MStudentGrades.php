@@ -32,8 +32,8 @@ class MStudentGrades extends Model
     protected $validationRules = [
         'enrollment_id' => 'required|integer',
         'course_id' => 'required|integer',
-        'grade_value' => 'required|decimal',
-        'completed_at' => 'required|valid_date[Y-m-d]',
+        'grade_value' => 'permit_empty|decimal',
+        'completed_at' => 'permit_empty|valid_date[Y-m-d]',
     ];
 
     protected $validationMessages = [
@@ -45,14 +45,14 @@ class MStudentGrades extends Model
             'required' => 'Course ID is required.',
             'integer' => 'Course ID must be a number.',
         ],
-        'grade_value' => [
-            'required' => 'Grade value is required.',
-            'decimal' => 'Grade value must be a decimal number.',
-        ],
-        'completed_at' => [
-            'required' => 'Completion date is required.',
-            'valid_date' => 'Completed date must be in Y-m-d H:i:s format.',
-        ],
+        // 'grade_value' => [
+        //     'required' => 'Grade value is required.',
+        //     'decimal' => 'Grade value must be a decimal number.',
+        // ],
+        // 'completed_at' => [
+        //     'required' => 'Completion date is required.',
+        //     'valid_date' => 'Completed date must be in Y-m-d H:i:s format.',
+        // ],
     ];
 
     protected $skipValidation = false;
