@@ -19,7 +19,6 @@
     <div id="file-size-error" class="text-danger mt-2" style="display: none">
         Ukuran file tidak boleh melebihi 5MB
     </div>
-
     <img id="image-preview" class="img-fluid" src="#" alt="Image Preview" style="display: none" />
 </div>
 <input type="submit" value="upload">

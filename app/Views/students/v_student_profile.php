@@ -29,14 +29,21 @@
                 <h5 class="modal-title" id="uploadDiplomaModalLabel">Upload High School Diploma</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="profile/upload-diploma" method="post" enctype="multipart/form-data">
+            <form action="profile/upload-diploma" method="post" enctype="multipart/form-data" id="upload-form">
                 <div class="modal-body">
 
                     <p class="text-danger">{validation_errors}</p>
+                    <div id="file-type-error" class="text-danger mt-2" style="display: none">
+                        File must be in format PDF, DOC, DOCX
+                    </div>
+                    <div id="file-size-error" class="text-danger mt-2" style="display: none">
+                        Ukuran file tidak boleh melebihi 5MB
+                    </div>
 
                     <div class="mb-3">
                         <label for="diploma_file" class="form-label">Choose File</label>
-                        <input type="file" class="form-control" name="high_school_diploma" id="diploma_file" required>
+                        <input type="file" class="form-control" name="high_school_diploma" id="diploma_file" required
+                            data-pristine-required-message="File must be uploaded.">
                         <small class="text-muted">Accepted formats: PDF, DOC, DOCX</small>
                     </div>
 
@@ -61,6 +68,60 @@
             var uploadModal = new bootstrap.Modal(document.getElementById("uploadDiplomaModal"));
             uploadModal.show();
         }
+
+        var form = document.getElementById("upload-form");
+        var pristine = new Pristine(form);
+
+        var fileInput = document.getElementById("diploma_file");
+        var fileTypeError = document.getElementById("file-type-error");
+        var fileSizeError = document.getElementById("file-size-error");
+
+        var maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        var allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        var allowedExtensions = ['.pdf', '.doc', '.docx'];
+
+        pristine.addValidator(fileInput, function (value) {
+            fileTypeError.style.display = 'none';
+            fileSizeError.style.display = 'none';
+
+            if (fileInput.files.length === 0) {
+                return true;
+            }
+
+            var file = fileInput.files[0];
+            var validType = allowedTypes.includes(file.type);
+            if (!validType) {
+                var fileName = file.name.toLowerCase();
+                validType = allowedExtensions.some(function (ext) {
+                    return fileName.endsWith(ext);
+                })
+            }
+
+            if (!validType) {
+                fileTypeError.style.display = 'block';
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                fileSizeError.style.display = 'block';
+                return false;
+            }
+
+            return true;
+        }, "Invalid file type or size.", 5, false);
+
+        form.addEventListener("submit", function (e) {
+            var valid = pristine.validate();
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
+
+        fileInput.addEventListener('change', function () {
+            fileTypeError.style.display = 'none';
+            fileSizeError.style.display = 'none';
+            pristine.validate(fileInput);
+        });
     });
 
     document.getElementById("diploma_file").addEventListener("change", function (event) {
@@ -69,7 +130,7 @@
             var fileType = file.type;
             var fileURL = URL.createObjectURL(file);
 
-            if (fileType === "application/pdf") {
+            if (fileType === "application/pdf" || fileType === "application/msword" || fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
                 document.getElementById("diplomaPreview").src = fileURL;
                 document.getElementById("previewContainer").style.display = "block";
             }

@@ -144,6 +144,7 @@ class StudentController extends BaseController
         }
 
         $student['button_upload_diploma'] = '';
+        $student['success'] = '';
 
         $data = $student;
         // print_r($students);
