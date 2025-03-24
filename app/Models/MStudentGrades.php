@@ -93,14 +93,17 @@ class MStudentGrades extends Model
     public function getGPAPerSemester($studentId)
     {
         return $this
-            ->select('SUM(courses.credits * 
+            ->select("SUM(courses.credits * 
         CASE 
-            WHEN student_grades.grade_value >= 90 THEN 4.00
-            WHEN student_grades.grade_value >= 80 THEN 3.00
-            WHEN student_grades.grade_value >= 70 THEN 2.00
-            WHEN student_grades.grade_value >= 60 THEN 1.00
+            WHEN student_grades.grade_letter = 'A+' THEN 4.00
+            WHEN student_grades.grade_letter = 'A' THEN 3.50
+            WHEN student_grades.grade_letter = 'B+' THEN 3.00
+            WHEN student_grades.grade_letter = 'B' THEN 2.50
+            WHEN student_grades.grade_letter = 'B-' THEN 2.00
+            WHEN student_grades.grade_letter = 'C' THEN 1.50
+            WHEN student_grades.grade_letter = 'D' THEN 1.00
             ELSE 0.00 
-        END) / SUM(courses.credits)::FLOAT AS gpa, enrollments.semester')
+        END) / SUM(courses.credits)::FLOAT AS gpa, enrollments.semester")
             ->join('enrollments', 'student_grades.enrollment_id = enrollments.id')
             ->join('courses', 'enrollments.course_id = courses.id')
             ->where('enrollments.student_id', $studentId)
