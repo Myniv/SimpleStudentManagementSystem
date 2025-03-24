@@ -13,7 +13,7 @@ class MStudent extends Model
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     // protected $returnType = 'array';
-    protected $returnType = \App\Entities\Student::class;
+    protected $returnType = Student::class;
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields = ["student_id", "name", "study_program", "current_semester", "academic_status", "entry_year", "gpa", "user_id", "high_school_diploma"];
@@ -174,6 +174,19 @@ class MStudent extends Model
         if ($averageGrade >= 50)
             return 2.0;
         return 1.0; // Below 50 is a failing grade
+    }
+
+    public function getStudentCredits($studentId)
+    {
+        return $this->db->table('enrollments')
+            ->select('students.id, students.name, enrollments.semester as semester, SUM(courses.credits) as total_credits')
+            ->join('courses', 'enrollments.course_id = courses.id')
+            ->join('students', 'enrollments.student_id = students.id')
+            ->where('students.id', $studentId)
+            ->where('enrollments.status', 'Pass')
+            ->groupBy('students.id, students.name, enrollments.semester')
+            ->get() // ✅ Execute the query
+            ->getResultArray(); // ✅ Fetch results as
     }
 
 }

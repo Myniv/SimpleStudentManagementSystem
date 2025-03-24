@@ -121,5 +121,18 @@ class MEnrollment extends Model
             ->findAll();
     }
 
+    public function getStudentCredits($studentId)
+    {
+        return $this
+            ->select('students.id, students.name, enrollments.semester as semester, SUM(courses.credits) as total_credits')
+            ->join('courses', 'enrollments.course_id = courses.id')
+            ->join('students', 'enrollments.student_id = students.id')
+            ->where('students.id', $studentId)
+            ->where('enrollments.status', 'Pass')
+            ->groupBy('students.id, students.name, enrollments.semester')
+            ->get() // ✅ Execute the query
+            ->getResultArray(); // ✅ Fetch results as
+    }
+
 
 }
