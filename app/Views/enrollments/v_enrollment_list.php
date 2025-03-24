@@ -3,9 +3,20 @@
 
 <h2 class="text-center my-4">Enrollment List</h2>
 
-<?php if (in_groups('lecturer') || in_groups('student')): ?>
-    <a class="btn btn-primary mb-2" href="/enrollments/create">Add Enrollment</a>
-<?php endif; ?>
+<div class="row mb-1">
+    <div class="col-md-3">
+        <?php if (in_groups('lecturer') || in_groups('student')): ?>
+            <a class="btn btn-primary mb-2" href="/enrollments/create">Add Enrollment</a>
+        <?php endif; ?>
+        <?php if (in_groups('lecturer')): ?>
+            <a href="<?= base_url('/enrollments/report') . '?' . http_build_query([
+                'student_id' => $params->student_id,
+            ]) ?>" class="btn btn-success" target="_blank">
+                <i class="bi bi-file-excel me-1"></i> Export PDF
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
 <form action="<?= $baseUrl ?>" method="get" class="form-inline mb-3">
     <div class="row mb-4">

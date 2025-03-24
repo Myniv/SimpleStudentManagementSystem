@@ -10,6 +10,9 @@ use App\Models\MStudent;
 use App\Models\MStudentGrades;
 use CodeIgniter\HTTP\ResponseInterface;
 use function PHPUnit\Framework\returnArgument;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment as Alignment;
 
 class EnrollmentController extends BaseController
 {
@@ -194,5 +197,93 @@ class EnrollmentController extends BaseController
     {
         $this->enrollmentModel->delete($id);
         return redirect()->to('/enrollments');
+    }
+
+    public function reportStudentExcel()
+    {
+        $student_id = $this->request->getGet("student_id");
+        if (!empty($student_id)) {
+            $enrollments = $this->enrollmentModel->getEnrollmentBasedStudent($student_id);
+            $name = $this->studentModel->select('name')->find($student_id)->name;
+        } else {
+            $enrollments = $this->enrollmentModel->getAllEnrollment();
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'Lapora Enrollment Mata Kuliah');
+        $sheet->mergeCells('A1:J1');
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+        $sheet->getStyle('A1')->getFont()->setSize(14);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $sheet->setCellValue('A3', 'Filter');
+        $sheet->setCellValue('B3', 'Student ID :' . ($student_id ?? 'Semua'));
+        $sheet->setCellValue('D3', 'Nama:' . ($name ?? 'Semua'));
+        $sheet->getStyle('A3:D3')->getFont()->setBold(true);
+
+        $headers = [
+            'A5' => 'No',
+            'B5' => 'Student ID',
+            'C5' => 'Nama',
+            'D5' => 'Program Studi',
+            'E5' => 'Semester',
+            'F5' => 'Kode Mata Kuliah',
+            'G5' => 'Mata Kuliah',
+            'H5' => 'SKS',
+            'I5' => 'Tahun Akademik',
+            'J5' => 'Status',
+        ];
+
+        foreach ($headers as $cell => $value) {
+            $sheet->setCellValue($cell, $value);
+            $sheet->getStyle($cell)->getFont()->setBold(true);
+            $sheet->getStyle($cell)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
+
+        $row = 6;
+        $no = 1;
+        foreach ($enrollments as $enrollment) {
+            $sheet->setCellValue('A' . $row, $no);
+            $sheet->setCellValue('B' . $row, $enrollment->student_id);
+            $sheet->setCellValue('C' . $row, $enrollment->student_name);
+            $sheet->setCellValue('D' . $row, $enrollment->study_program);
+            $sheet->setCellValue('E' . $row, $enrollment->current_semester);
+            $sheet->setCellValue('F' . $row, $enrollment->course_code);
+            $sheet->setCellValue('G' . $row, $enrollment->course_name);
+            $sheet->setCellValue('H' . $row, $enrollment->credits);
+            $sheet->setCellValue('I' . $row, $enrollment->academic_year . ' - ' . $enrollment->enrollment_semester);
+            $sheet->setCellValue('J' . $row, $enrollment->status);
+
+            $row++;
+            $no++;
+        }
+
+        foreach (range('A', 'J') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ];
+
+        $sheet->getStyle('A5:J' . ($row - 1))->applyFromArray($styleArray);
+
+
+
+        $filename = 'Laporan_Mata_Kuliah_Enrol_' . date('Y-m-d-His') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit();
     }
 }

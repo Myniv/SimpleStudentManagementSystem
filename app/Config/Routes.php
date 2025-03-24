@@ -60,6 +60,7 @@ $routes->group(
         $routes->match(['get', 'post'], 'create', [EnrollmentController::class, 'create']);
         $routes->match(['get', 'put'], 'update/(:num)', [EnrollmentController::class, 'update']);
         $routes->delete('delete/(:num)', [EnrollmentController::class, 'delete/$1']);
+        $routes->get('report', [EnrollmentController::class, 'reportStudentExcel']);
     }
 );
 

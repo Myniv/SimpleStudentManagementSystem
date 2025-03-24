@@ -156,7 +156,7 @@ class MEnrollment extends Model
 
     public function getEnrollmentBasedStudent($id)
     {
-        return $this->select('enrollments.id, students.name AS student_name, courses.name AS course_name, enrollments.academic_year, enrollments.semester, enrollments.status')
+        return $this->select('enrollments.id,enrollments.semester as enrollment_semester, enrollments.student_id as student_id, students.study_program as study_program, students.name AS student_name,courses.code as course_code, courses.name AS course_name, courses.credits as credits, enrollments.academic_year as academic_year, enrollments.semester as current_semester, enrollments.status as status')
             ->join('students', 'students.id = enrollments.student_id', 'left')
             ->join('courses', 'courses.id = enrollments.course_id', 'left')
             ->where('enrollments.student_id', $id)
@@ -165,7 +165,7 @@ class MEnrollment extends Model
 
     public function getAllEnrollment()
     {
-        return $this->select('enrollments.*, students.name AS student_name, courses.name AS course_name')
+        return $this->select('enrollments.id,enrollments.student_id as student_id, students.name AS student_name,courses.code as course_code, courses.name AS course_name, courses.credits as credits, enrollments.academic_year as academic_year, enrollments.semester as current_semester, enrollments.status as status')
             ->join('students', 'students.id = enrollments.student_id', 'left')
             ->join('courses', 'courses.id = enrollments.course_id', 'left')
             ->findAll();
