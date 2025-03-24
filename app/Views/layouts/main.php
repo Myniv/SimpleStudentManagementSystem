@@ -13,6 +13,7 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="<?php echo base_url('js/bootstrap.js') ?>"><</script>
     <script src="<?= base_url('js/pristine/dist/pristine.js') ?>" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <div class="d-flex flex-column min-vh-100">
     <?= $this->include('components/header') ?>

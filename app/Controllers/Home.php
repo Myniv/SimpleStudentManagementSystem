@@ -205,4 +205,133 @@ class Home extends BaseController
             ->save(WRITEPATH . 'uploads/watermark/' . "watermark_" . $fileName);
     }
 
+    public function dashboardStudentDummy()
+    {
+        //Pie Chart : 
+        $creditsByGrade = $this->getCreditsByGrade();
+
+        //Bar Chart :
+        $creditComparison = $this->getCreditComparison();
+
+        //Line Chart :
+        $gpaData = $this->getGpaPerSemester();
+
+        $data['creditsByGrade'] = json_encode($creditsByGrade);
+        $data['creditComparison'] = json_encode($creditComparison);
+        $data['gpaData'] = json_encode($gpaData);
+        return view('dashboard/v_dashboard_student', $data);
+    }
+
+    //Pie Chart
+    private function getCreditsByGrade()
+    {
+        $dummyGradeCredits = [
+            ['grade_letter' => 'A', 'credits' => 45],
+            ['grade_letter' => 'B+', 'credits' => 20],
+            ['grade_letter' => 'B', 'credits' => 32],
+            ['grade_letter' => 'C+', 'credits' => 8],
+            ['grade_letter' => 'C', 'credits' => 18],
+            ['grade_letter' => 'D', 'credits' => 6],
+
+        ];
+
+        $backgroundColors = [
+            'A' => 'rgb(54, 162, 235)', // Biru 
+            'B+' => 'rgb(75, 192, 192)', // Cyan 
+            'B' => 'rgb(153, 102, 255)', // Ungu 
+            'C+' => 'rgb(255, 205, 86)', // Kuning
+            'C' => 'rgb(255, 159, 64)', // Oranye 
+            'D' => 'rgb(255, 99, 132)' // Merah
+        ];
+
+        foreach ($dummyGradeCredits as $row) {
+            $gradeLabels[] = $row['grade_letter'] . '=' . $row['credits'] . ' Credits';
+            $creditCounts[] = (int) $row['credits'];
+            $colors[] = $backgroundColors[$row['grade_letter']];
+        }
+
+        return [
+            'labels' => $gradeLabels,
+            'datasets' => [
+                [
+                    'label' => 'Credits By Grade',
+                    'data' => $creditCounts,
+                    'backgroundColor' => $colors,
+                    'hoverOffset' => 4
+                ]
+            ]
+        ];
+    }
+
+    //Bar Chart
+    private function getCreditComparison()
+    {
+        $dummyCredits = [
+            ['semester' => 1, 'credits_taken' => 20, 'credits_required' => 20],
+            ['semester' => 2, 'credits_taken' => 19, 'credits_required' => 22],
+            ['semester' => 3, 'credits_taken' => 22, 'credits_required' => 24],
+            ['semester' => 4, 'credits_taken' => 20, 'credits_required' => 22],
+            ['semester' => 5, 'credits_taken' => 18, 'credits_required' => 20],
+            ['semester' => 6, 'credits_taken' => 16, 'credits_required' => 18]
+        ];
+
+        foreach ($dummyCredits as $row) {
+            $labels[] = 'Semester ' . $row['semester'];
+            $creditsTaken[] = (int) $row['credits_taken'];
+            $creditsRequired[] = (int) $row['credits_required'];
+        }
+
+        return [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Credits Taken',
+                    'data' => $creditsTaken,
+                    'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
+                    'borderColor' => 'rgb(54, 162, 235)',
+                    'borderWidth' => 1
+                ],
+                [
+                    'label' => 'Credits Required',
+                    'data' => $creditsRequired,
+                    'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'borderWidth' => 1
+                ]
+            ]
+        ];
+    }
+
+    //Line Chart
+    private function getGpaPerSemester()
+    {
+        $dummyGpaData = [
+            ['semester' => 1, 'semester_gpa' => 3.45],
+            ['semester' => 2, 'semester_gpa' => 2.52],
+            ['semester' => 3, 'semester_gpa' => 3.21],
+            ['semester' => 4, 'semester_gpa' => 2.68],
+            ['semester' => 5, 'semester_gpa' => 3.75],
+            ['semester' => 6, 'semester_gpa' => 2.82],
+            ['semester' => 7, 'semester_gpa' => 3.41],
+            ['semester' => 8, 'semester_gpa' => 2.95],
+        ];
+        foreach ($dummyGpaData as $row) {
+            $semesters[] = 'Semester ' . $row['semester'];
+            $gpaData[] = round($row['semester_gpa'], 2);
+        }
+
+        return [
+            'labels' => $semesters,
+            'datasets' => [
+                [
+                    'label' => 'GPA',
+                    'data' => $gpaData,
+                    'borderColor' => 'rgba(75, 192, 192, 1)',
+                    'tension' => 0.1,
+                    'fill' => false
+                ]
+            ]
+        ];
+    }
+
 }
