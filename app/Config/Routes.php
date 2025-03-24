@@ -109,3 +109,7 @@ $routes->match(['get', 'post'], 'upload', [Home::class, 'testUploadFiles']);
 $routes->get('/dashboard-student', [Home::class, 'dashboardStudentDummy']);
 $routes->get('/report/enrollment', [ReportDummyController::class, 'enrollmentForm']);
 $routes->get('/report/enrollmentExcel', [ReportDummyController::class, 'enrollmentExcel']);
+
+$routes->get('/report/students-by-program-study', [ReportDummyController::class, 'studentsByProgramForm']);
+$routes->post('/report/students-by-program-study-pdf', [ReportDummyController::class, 'studentsByProgramPdf']);
+
