@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\MStudent;
 use CodeIgniter\HTTP\ResponseInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -13,8 +14,10 @@ class ReportDummyController extends BaseController
 {
     protected $enrollmentData;
     protected $studentsData;
+    protected $studentModel;
     public function __construct()
     {
+        $this->studentModel = new MStudent();
         $this->enrollmentData = [
             (object) [
                 'id' => 1,
@@ -224,8 +227,8 @@ class ReportDummyController extends BaseController
 
     public function studentsByProgramForm()
     {
-        $study_programs = ['Teknik Informatika', 'Sistem Informasi', 'Teknik Komputer'];
-        $entry_years = ['2021', '2022', '2023', '2024'];
+        $study_programs = $this->studentModel->getAllStudyPrograms();
+        $entry_years = $this->studentModel->getAllEntryYear();
 
         $data = [
             'title' => 'Laporan Mahasiswa Berdasarkan Program Studi',
@@ -243,8 +246,20 @@ class ReportDummyController extends BaseController
 
 
         $pdf = $this->initTcpdf();
-        // $this->generatePdfHtmlContent($pdf, $this->studentsData, $studyProgram, $entryYear);
-        $this->generatePdfContent($pdf, $this->studentsData, $studyProgram, $entryYear);
+
+
+        if (!empty($studyProgram) && !empty($entryYear)) {
+            $student = $this->studentModel->where('study_program', $studyProgram)->where('entry_year', $entryYear)->findAll();
+        } else if (!empty($studyProgram)) {
+            $student = $this->studentModel->where('study_program', $studyProgram)->findAll();
+        } else if (!empty($entryYear)) {
+            $student = $this->studentModel->where('entry_year', $entryYear)->findAll();
+        } else {
+            $student = $this->studentModel->findAll();
+        }
+
+        $this->generatePdfHtmlContent($pdf, $student, $studyProgram, $entryYear);
+        // $this->generatePdfContent($pdf, $student, $studyProgram, $entryYear);
 
         // Output PDF
         $filename = 'laporan_mahasiswa_' . date('Y-m-d') . '.pdf';
@@ -282,6 +297,9 @@ class ReportDummyController extends BaseController
 
     public function generatePdfHtmlContent($pdf, $students, $studyProgram, $entryYear)
     {
+        $image_file = K_PATH_IMAGES . 'iconOrang.png';
+        $pdf->Image($image_file, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+
         $title = 'LAPORAN DATA MAHASISWA';
 
         if (!empty($studyProgram)) {

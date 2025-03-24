@@ -11,7 +11,7 @@
                     <select class="form-control" name="study_program" required>
                         <option value="">Pilih Program Studi</option>
                         <?php foreach ($study_programs as $program): ?>
-                            <option value="<?= $program ?>"> <?= $program ?></option>
+                            <option value="<?= $program->study_program ?>"> <?= $program->study_program ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -19,7 +19,7 @@
                     <select class="form-control" name="entry_year">
                         <option value="">Pilih Tahun Masuk</option>
                         <?php foreach ($entry_years as $year): ?>
-                            <option value="<?= $year ?>"> <?= $year ?></option>
+                            <option value="<?= $year->entry_year ?>"> <?= $year->entry_year ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
