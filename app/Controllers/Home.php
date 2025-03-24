@@ -136,12 +136,14 @@ class Home extends BaseController
                     'is_image[userfile]',
                     'mime_in[userfile,image/jpg,image/jpeg,image/png,image/gif]',
                     'max_size[userfile,5120]', // 5MB dalam KB (5 * 1024)
+                    'min_dims[userfile,600,600]',
                 ],
                 'errors' => [
-                    'uploaded' => 'Silakan pilih file gambar untuk diunggah',
-                    'is_image' => 'File harus berupa gambar',
-                    'mime_in' => 'File harus berformat JPG, JPEG, PNG, atau GIF',
-                    'max_size' => 'Ukuran file tidak boleh melebihi 5MB'
+                    'uploaded' => 'Please choose file tu uploaded.',
+                    'is_image' => 'File must be an image.',
+                    'mime_in' => 'File must be JPG, JPEG, PNG, atau GIF',
+                    'max_size' => 'File size must be less than 5MB',
+                    'min_dims' => 'Image must be at least 600x600'
                 ]
             ]
         ];
