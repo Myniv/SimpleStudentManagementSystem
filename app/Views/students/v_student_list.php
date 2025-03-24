@@ -69,6 +69,10 @@
             </a>
         </div>
 
+        <a href="{exportUrl}"
+            class="btn btn-success">
+            <i class="bi bi-file-excel me-1"></i> Export Excel
+        </a>
 
         <input type="hidden" name="sort" value="{sort}">
         <input type="hidden" name="order" value="{order}">
