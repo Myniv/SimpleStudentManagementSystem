@@ -15,6 +15,11 @@ class DataParams
     public $credits = '';
     public $semester = '';
 
+    //For Filter Enrollment List
+    public $student_id = '';
+    public $course_id = '';
+    public $status = '';
+
     public $sort = 'id';
     public $order = 'asc';
     public $page = 1;
@@ -29,6 +34,10 @@ class DataParams
 
         $this->credits = $params['credits'] ?? '';
         $this->semester = $params['semester'] ?? '';
+
+        $this->student_id = $params['student_id'] ?? '';
+        $this->course_id = $params['course_id'] ?? '';
+        $this->status = $params['status'] ?? '';
 
         $this->sort = $params['sort'] ?? 'id';
         $this->order = $params['order'] ?? 'asc';
@@ -46,6 +55,10 @@ class DataParams
 
             'credits' => $this->credits,
             'semester' => $this->semester,
+
+            'student_id' => $this->student_id,
+            'course_id' => $this->course_id,
+            'status' => $this->status,
 
             'sort' => $this->sort,
             'order' => $this->order,

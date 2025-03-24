@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\DataParams;
 use App\Models\MCourses;
 use App\Models\MEnrollment;
 use App\Models\MStudent;
@@ -23,19 +24,56 @@ class EnrollmentController extends BaseController
         $this->courseModel = new MCourses();
         $this->studentGradesModel = new MStudentGrades();
     }
+    // public function index()
+    // {
+    //     if (!logged_in()) {
+    //         return redirect()->to('/login'); // Ensure user is logged in
+    //     }
+
+    //     $student = $this->studentModel->where('user_id', user()->id)->first();
+
+    //     if (!in_array("student", user()->getRoles())) {
+    //         $data['enrollments'] = $this->enrollmentModel->getAllStudentCoursesAndGrades();
+    //     } else {
+    //         $data['enrollments'] = $this->enrollmentModel->getStudentCoursesAndGrades($student->id);
+    //     }
+    //     return view('enrollments/v_enrollment_list', $data);
+    // }
+
     public function index()
     {
-        if (!logged_in()) {
-            return redirect()->to('/login'); // Ensure user is logged in
-        }
+        $params = new DataParams([
+            "search" => $this->request->getGet("search"),
+
+            "student_id" => $this->request->getGet("student_id"),
+            "course_id" => $this->request->getGet("course_id"),
+            "status" => $this->request->getGet("status"),
+
+            "sort" => $this->request->getGet("sort"),
+            "order" => $this->request->getGet("order"),
+            "perPage" => $this->request->getGet("perPage"),
+            "page" => $this->request->getGet("page_enrollments"),
+        ]);
 
         $student = $this->studentModel->where('user_id', user()->id)->first();
 
         if (!in_array("student", user()->getRoles())) {
-            $data['enrollments'] = $this->enrollmentModel->getAllStudentCoursesAndGrades();
+            $result = $this->enrollmentModel->getFilteredEnrollments($params);
         } else {
-            $data['enrollments'] = $this->enrollmentModel->getStudentCoursesAndGrades($student->id);
+            $result = $this->enrollmentModel->getFilteredEnrollments($params, $student->id);
         }
+
+        $data = [
+            'enrollments' => $result['enrollments'],
+            'pager' => $result['pager'],
+            'total' => $result['total'],
+            'params' => $params,
+            'students' => $this->enrollmentModel->getAllStudentEnrollments(),
+            'courses' => $this->enrollmentModel->getAllCoursesEnrollments(),
+            'statuss' => $this->enrollmentModel->getAllStatusEnrollments(),
+            'baseUrl' => base_url('enrollments'),
+        ];
+
         return view('enrollments/v_enrollment_list', $data);
     }
 
@@ -54,7 +92,7 @@ class EnrollmentController extends BaseController
             $data["courses"] = $this->courseModel->findAll();
             return view("enrollments/v_enrollment_form", $data);
         }
-        
+
         $courseId = $this->request->getPost('course_id');
         $formData = [
             'student_id' => $this->request->getPost('student_id'),
@@ -88,7 +126,7 @@ class EnrollmentController extends BaseController
             'status' => null,
         ];
         // dd($studentGradesData);
-        if(!$this->studentGradesModel->save($studentGradesData)){
+        if (!$this->studentGradesModel->save($studentGradesData)) {
             return redirect()->back()->withInput()->with('errorGrades', $this->studentGradesModel->errors());
         }
 
