@@ -7,6 +7,7 @@ use App\Entities\StudentDb;
 use App\Libraries\DataParams;
 use App\Models\MEnrollment;
 use App\Models\MStudent;
+use App\Models\MStudentGrades;
 use CodeIgniter\HTTP\ResponseInterface;
 use Myth\Auth\Models\UserModel;
 
@@ -14,6 +15,7 @@ class StudentController extends BaseController
 {
     private $studentModel;
     private $enrollmentModel;
+    private $studentGradesModel;
     protected $userModel;
 
     public function __construct()
@@ -21,6 +23,7 @@ class StudentController extends BaseController
         $this->userModel = new UserModel();
         $this->studentModel = new MStudent();
         $this->enrollmentModel = new MEnrollment();
+        $this->studentGradesModel = new MStudentGrades();
     }
 
     public function index()
@@ -316,6 +319,127 @@ class StudentController extends BaseController
             ->setHeader('Content-Disposition', 'inline; filename="' . $filePath . '"')
             ->setBody(file_get_contents($fullPath));
     }
+
+    public function dashboardStudent()
+    {
+        $user = user()->username;
+        $newUser = $this->userModel->where('username', $user)->first();
+
+        $student = $this->studentModel
+            ->where('user_id', $newUser->id)
+            ->first();
+
+        $data['creditComparison'] = json_encode($this->getStudentCreditsCompariosn($student->id));
+        $data['creditsByGrade'] = json_encode($this->getCreditsByGrade($student->id));
+        // print_r($data['creditComparison']);
+
+
+        return view('dashboard/v_dashboard_student', $data);
+    }
+
+    private function getCreditsByGrade($studentId)
+    {
+        $data = [];
+        $grades = $this->studentGradesModel->getCreditDistributionByGrades($studentId);
+
+        foreach ($grades as $grade) {
+            $data[] = [
+                'grade_letter' => $grade['grade_letter'],
+                'credits' => $grade['total_credits']
+            ];
+        }
+
+        $backgroundColors = [
+            'A' => 'rgb(54, 162, 235)', // Biru 
+            'B+' => 'rgb(75, 192, 192)', // Cyan 
+            'B' => 'rgb(153, 102, 255)', // Ungu 
+            'C+' => 'rgb(255, 205, 86)', // Kuning
+            'C' => 'rgb(255, 159, 64)', // Oranye 
+            'D' => 'rgb(255, 99, 132)' // Merah
+        ];
+
+        $gradeLabels = [];
+        $creditCounts = [];
+        $colors = [];
+        foreach ($data as $row) {
+            $gradeLabels[] = $row['grade_letter'] . '=' . $row['credits'] . ' Credits';
+            $creditCounts[] = (int) $row['credits'];
+            $colors[] = $backgroundColors[$row['grade_letter']];
+        }
+
+        return [
+            'labels' => $gradeLabels,
+            'datasets' => [
+                [
+                    'label' => 'Credits By Grade',
+                    'data' => $creditCounts,
+                    'backgroundColor' => $colors,
+                    'hoverOffset' => 4
+                ]
+            ]
+        ];
+    }
+
+    private function getStudentCreditsCompariosn($studentId)
+    {
+        $credits = $this->enrollmentModel->getStudentCredits($studentId);
+
+        $creditsRequired = [
+            ['semester' => 1, 'credits_required' => 20],
+            ['semester' => 2, 'credits_required' => 24],
+            ['semester' => 3, 'credits_required' => 18],
+            ['semester' => 4, 'credits_required' => 20],
+            ['semester' => 5, 'credits_required' => 18],
+            ['semester' => 6, 'credits_required' => 16],
+            ['semester' => 7, 'credits_required' => 18],
+            ['semester' => 8, 'credits_required' => 18],
+        ];
+
+        foreach ($credits as $row) {
+            $tempCreditsRequired = 0;
+            foreach ($creditsRequired as $value) {
+                if ($value['semester'] == $row['semester']) {
+                    $tempCreditsRequired = $value['credits_required'];
+                }
+            }
+            $data[] = [
+                'semester' => $row['semester'],
+                'credits_taken' => $row['total_credits'],
+                'credits_required' => $tempCreditsRequired
+            ];
+        }
+
+        $labels = [];
+        $creditsTaken = [];
+        $creditsRequired = [];
+        foreach ($data as $row) {
+            $labels[] = 'Semester ' . $row['semester'];
+            $creditsTaken[] = (int) $row['credits_taken'];
+            $creditsRequired[] = (int) $row['credits_required'];
+        }
+
+        return [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Credits Taken',
+                    'data' => $creditsTaken,
+                    'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
+                    'borderColor' => 'rgb(54, 162, 235)',
+                    'borderWidth' => 1
+                ],
+                [
+                    'label' => 'Credits Required',
+                    'data' => $creditsRequired,
+                    'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'borderWidth' => 1
+                ]
+            ]
+        ];
+    }
+
+
 
 }
 

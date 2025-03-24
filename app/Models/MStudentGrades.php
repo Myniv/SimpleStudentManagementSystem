@@ -77,4 +77,16 @@ class MStudentGrades extends Model
             ->join('students', 'students.id = enrollments.student_id', 'left')
             ->findAll();
     }
+
+    public function getCreditDistributionByGrades($studentId)
+    {
+        return $this->select('student_grades.grade_letter as grade_letter, SUM(courses.credits) as total_credits')
+            ->join('courses', 'courses.id = student_grades.course_id', 'left')
+            ->join('enrollments', 'enrollments.id = student_grades.enrollment_id', 'left')
+            ->where('enrollments.student_id', $studentId)
+            ->where('student_grades.grade_letter IS NOT NULL')
+            ->groupBy('student_grades.grade_letter')
+            ->get() // ✅ Execute the query
+            ->getResultArray(); // ✅ Fetch results as
+    }
 }
