@@ -5,6 +5,7 @@ use App\Controllers\AuthController;
 use App\Controllers\CoursesController;
 use App\Controllers\EnrollmentController;
 use App\Controllers\Home;
+use App\Controllers\ReportDummyController;
 use App\Controllers\StudentController;
 use App\Controllers\StudentGradesController;
 use App\Controllers\UsersController;
@@ -105,3 +106,5 @@ $routes->group(
 $routes->match(['get', 'post'], 'upload', [Home::class, 'testUploadFiles']);
 
 $routes->get('/dashboard-student', [Home::class, 'dashboardStudentDummy']);
+$routes->get('/report/enrollment', [ReportDummyController::class, 'enrollmentForm']);
+$routes->get('/report/enrollmentExcel', [ReportDummyController::class, 'enrollmentExcel']);
