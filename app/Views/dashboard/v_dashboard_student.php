@@ -42,9 +42,11 @@
 <?= $this->section('scripts') ?>
 <script>
     // Data dari controller
-    
+
     const creditComparison = <?= $creditComparison ?>;
     const creditsByGrade = <?= $creditsByGrade ?>;
+    const gpaData = <?= $gpaData ?>;
+
 
 
     //JS Pie Chart
@@ -106,47 +108,47 @@
     );
 
     //JS Line Chart
-    // const gpaChart = new Chart(
-    //     document.getElementById('gpaChart'),
-    //     {
-    //         type: 'line',
-    //         //Change the data here
-    //         data: gpaData,
-    //         options: {
-    //             responsive: true,
-    //             maintainAspectRatio: false,
-    //             scales: {
-    //                 y: {
-    //                     min: 0,
-    //                     max: 4,
-    //                     title: {
-    //                         display: true,
-    //                         text: 'GPA'
-    //                     }
-    //                 },
-    //                 x: {
-    //                     title: {
-    //                         display: true,
-    //                         text: 'Semester'
-    //                     }
-    //                 }
-    //             },
-    //             plugins: {
-    //                 title: {
-    //                     display: true,
-    //                     text: 'Academic Progress (GPA per Semester)'
-    //                 },
-    //                 tooltip: {
-    //                     callbacks: {
-    //                         label: function (context) {
-    //                             return `GPA: ${context.raw}`;
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // );
+    const gpaChart = new Chart(
+        document.getElementById('gpaChart'),
+        {
+            type: 'line',
+            //Change the data here
+            data: gpaData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 4,
+                        title: {
+                            display: true,
+                            text: 'GPA'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Semester'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Academic Progress (GPA per Semester)'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `GPA: ${context.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    );
 
 </script>
 <?= $this->endSection() ?>

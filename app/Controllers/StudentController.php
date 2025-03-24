@@ -336,8 +336,8 @@ class StudentController extends BaseController
 
         $data['creditComparison'] = json_encode($this->getStudentCreditsCompariosn($student->id));
         $data['creditsByGrade'] = json_encode($this->getCreditsByGrade($student->id));
+        $data['gpaData'] = json_encode($this->getGpaPerSemester($student->id));
         // print_r($data['creditComparison']);
-
 
         return view('dashboard/v_dashboard_student', $data);
     }
@@ -406,6 +406,7 @@ class StudentController extends BaseController
             foreach ($creditsRequired as $value) {
                 if ($value['semester'] == $row['semester']) {
                     $tempCreditsRequired = $value['credits_required'];
+                    break;
                 }
             }
             $data[] = [
@@ -440,6 +441,33 @@ class StudentController extends BaseController
                     'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
                     'borderColor' => 'rgb(255, 99, 132)',
                     'borderWidth' => 1
+                ]
+            ]
+        ];
+    }
+
+    private function getGpaPerSemester($studentId)
+    {
+        $data = $this->studentGradesModel->getGPAPerSemester($studentId);
+        // dd($data);
+
+        $semesters = [];
+        $gpaData = [];
+        foreach ($data as $row) {
+            $semesters[] = 'Semester ' . $row['semester'];
+            $gpaData[] = round($row['gpa'], 2);
+            // $gpaData[] = $row['gpa'];
+        }
+
+        return [
+            'labels' => $semesters,
+            'datasets' => [
+                [
+                    'label' => 'GPA',
+                    'data' => $gpaData,
+                    'borderColor' => 'rgba(75, 192, 192, 1)',
+                    'tension' => 0.1,
+                    'fill' => false
                 ]
             ]
         ];
