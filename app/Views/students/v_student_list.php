@@ -1,6 +1,13 @@
 <h2 class="text-center my-4">Student List</h2>
 
-<a href="/admin/student/create" class="btn btn-primary mb-1">Add Student</a>
+<div class="row mb-1">
+    <div class="col-md-3">
+        <a href="/admin/student/create" class="btn btn-primary mb-1">Add Student</a>
+        <a href="{exportUrl}" class="btn btn-success" target="_blank">
+            <i class="bi bi-file-excel me-1"></i> Export PDF
+        </a>
+    </div>
+</div>
 <form action="{baseUrl}" method="get" class="form-inline mb-3">
     <div class="row mb-4">
         <div class="col-md-3">
@@ -67,12 +74,11 @@
             <a href="{reset}" class="btn btn-secondary">
                 Reset
             </a>
+
         </div>
 
-        <a href="{exportUrl}"
-            class="btn btn-success">
-            <i class="bi bi-file-excel me-1"></i> Export Excel
-        </a>
+
+
 
         <input type="hidden" name="sort" value="{sort}">
         <input type="hidden" name="order" value="{order}">

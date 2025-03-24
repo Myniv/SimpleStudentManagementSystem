@@ -13,6 +13,7 @@ use Myth\Auth\Models\UserModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment as Alignment;
+use TCPDF;
 
 
 class StudentController extends BaseController
@@ -122,7 +123,10 @@ class StudentController extends BaseController
                         '↑' : '↓') : ''
                 ],
             ],
-            'exportUrl' => base_url('/admin/student/reports'),
+            'exportUrl' => base_url('/admin/student/reports') . '?' . http_build_query([
+                'study_program' => $params->study_program,
+                'entry_year' => $params->entry_year,
+            ]),
         ];
 
         // print_r($students);
@@ -471,6 +475,121 @@ class StudentController extends BaseController
                 ]
             ]
         ];
+    }
+
+    public function studentsByProgramPdf()
+    {
+        $studyProgram = $this->request->getVar('study_program');
+        $entryYear = $this->request->getVar('entry_year');
+
+        $pdf = $this->initTcpdf();
+
+        if (!empty($studyProgram) && !empty($entryYear)) {
+            $student = $this->studentModel->where('study_program', $studyProgram)->where('entry_year', $entryYear)->findAll();
+        } else if (!empty($studyProgram)) {
+            $student = $this->studentModel->where('study_program', $studyProgram)->findAll();
+        } else if (!empty($entryYear)) {
+            $student = $this->studentModel->where('entry_year', $entryYear)->findAll();
+        } else {
+            $student = $this->studentModel->findAll();
+        }
+
+        $this->generatePdfHtmlContent($pdf, $student, $studyProgram, $entryYear);
+        // $this->generatePdfContent($pdf, $student, $studyProgram, $entryYear);
+
+        // Output PDF
+        $filename = 'laporan_mahasiswa_' . date('Y-m-d') . '.pdf';
+        $pdf->Output($filename, 'I');
+        exit;
+    }
+
+    private function initTcpdf()
+    {
+        $pdf = new TCPDF('L', 'mm', 'A4', true, 'UTF-8', false);
+
+        $pdf->SetCreator('CodeIgniter 4');
+        $pdf->SetAuthor('Administrator');
+        $pdf->SetTitle('Laporan Mahasiswa');
+        $pdf->SetSubject('Laporan Data Mahasiswa');
+
+        $pdf->SetHeaderData('', 0, 'UNIVERSITAS XYZ', '', [0, 0, 0], [0, 64, 128]);
+        $pdf->setFooterData([0, 64, 0], [0, 64, 128]);
+
+        $pdf->setHeaderFont(['helvetica', '', 12]);
+        $pdf->setFooterFont(['helvetica', '', 8]);
+
+        $pdf->SetMargins(15, 20, 15);
+        $pdf->SetHeaderMargin(5);
+        $pdf->SetFooterMargin(10);
+
+        $pdf->SetAutoPageBreak(true, 25);
+
+        $pdf->SetFont('helvetica', '', 10);
+
+        $pdf->AddPage();
+
+        return $pdf;
+    }
+
+    public function generatePdfHtmlContent($pdf, $students, $studyProgram, $entryYear)
+    {
+        $image_file = K_PATH_IMAGES . 'iconOrang.png';
+        $pdf->Image($image_file, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+
+        $title = 'LAPORAN DATA MAHASISWA';
+
+        if (!empty($studyProgram)) {
+            $title .= ' - PROGRAM STUDI: ' . $studyProgram;
+        }
+
+        if (!empty($entryYear)) {
+            $title .= ' - TAHUN MASUK: ' . $entryYear;
+        }
+
+        $html = '<h2 style="text-align:center;">' . $title . '</h2>
+      <table border="1" cellpadding="5" cellspacing="0" style="width:100%;">
+        <thead>
+          <tr style="background-color:#CCCCCC; font-weight:bold; text-align:center;">
+            <th>No</th>
+            <th>NIM</th>
+            <th>Nama</th>
+            <th>Program Studi</th>
+            <th>Semester</th>
+            <th>Status</th>
+            <th>Tahun Masuk</th>
+            <th>IPK</th>
+          </tr>
+         </thead>
+         <tbody>';
+
+        $no = 1;
+        foreach ($students as $student) {
+            $html .= '
+           <tr>
+            <td style="text-align:center;">' . $no . '</td>
+            <td>' . $student->student_id . '</td>
+            <td>' . $student->name . '</td>
+            <td>' . $student->study_program . '</td>
+            <td style="text-align:center;">' . $student->current_semester . '</td>
+            <td style="text-align:center;">' . $student->academic_status . '</td>
+            <td style="text-align:center;">' . $student->entry_year . '</td>
+            <td style="text-align:center; font-weight:bold;">' . $student->gpa . '</td>
+           </tr>';
+            $no++;
+        }
+
+        $html .= '
+               </tbody>
+           </table>
+           
+           <p style="margin-top:30px; text-align:left;">      
+               Total Mahasiswa: ' . count($students) . ' 
+           </p>
+   
+           <p style="margin-top:30px; text-align:right;">    
+               Tanggal Cetak: ' . date('d-m-Y H:i:s') . '<br> 
+           </p>';
+        $pdf->writeHTML($html, true, false, true, false, '');
     }
 
     public function reportStudentExcel()
