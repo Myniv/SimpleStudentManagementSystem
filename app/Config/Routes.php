@@ -26,7 +26,8 @@ $routes->group(
         $routes->match(['get', 'put'], 'student/update/(:num)', [StudentController::class, 'update']);
         $routes->delete('student/delete/(:num)', [StudentController::class, 'delete/$1']);
         // $routes->get('student/reports', [StudentController::class, 'reportStudentExcel']);
-        $routes->get('student/reports', [StudentController::class, 'studentsByProgramPdf']);
+        $routes->get('student/report', [StudentController::class, 'viewStudentReportsPdf']);
+        $routes->get('student/report/pdf', [StudentController::class, 'studentReportsPdf']);
     }
 );
 

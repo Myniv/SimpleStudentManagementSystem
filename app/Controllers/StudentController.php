@@ -123,10 +123,7 @@ class StudentController extends BaseController
                         '↑' : '↓') : ''
                 ],
             ],
-            'exportUrl' => base_url('/admin/student/reports') . '?' . http_build_query([
-                'study_program' => $params->study_program,
-                'entry_year' => $params->entry_year,
-            ]),
+            'exportUrl' => base_url('/admin/student/report'),
         ];
 
         // print_r($students);
@@ -477,7 +474,31 @@ class StudentController extends BaseController
         ];
     }
 
-    public function studentsByProgramPdf()
+    public function viewStudentReportsPdf()
+    {
+        $studyProgram = $this->request->getVar('study_program');
+        $entryYear = $this->request->getVar('entry_year');
+
+        if (!empty($studyProgram) && !empty($entryYear)) {
+            $student = $this->studentModel->where('study_program', $studyProgram)->where('entry_year', $entryYear)->findAll();
+        } else if (!empty($studyProgram)) {
+            $student = $this->studentModel->where('study_program', $studyProgram)->findAll();
+        } else if (!empty($entryYear)) {
+            $student = $this->studentModel->where('entry_year', $entryYear)->findAll();
+        } else {
+            $student = $this->studentModel->findAll();
+        }
+
+        $data['students'] = $student;
+        $data['study_program'] = $this->studentModel->getAllStudyPrograms();
+        $data['entry_year'] = $this->studentModel->getAllEntryYear();
+        $data['entry_year_selected'] = $entryYear;
+        $data['study_program_selected'] = $studyProgram;
+
+        return view('reports/v_report_students', $data);
+    }
+
+    public function studentReportsPdf()
     {
         $studyProgram = $this->request->getVar('study_program');
         $entryYear = $this->request->getVar('entry_year');
