@@ -123,7 +123,10 @@ class StudentController extends BaseController
                         '↑' : '↓') : ''
                 ],
             ],
-            'exportUrl' => base_url('/admin/student/report'),
+            'exportUrl' => base_url('/admin/student/report') . '?' . http_build_query([
+                'study_program' => $params->study_program,
+                'entry_year' => $params->entry_year,
+            ]),
         ];
 
         // print_r($students);

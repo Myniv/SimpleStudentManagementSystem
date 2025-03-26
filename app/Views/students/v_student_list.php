@@ -3,7 +3,7 @@
 <div class="row mb-1">
     <div class="col-md-3">
         <a href="/admin/student/create" class="btn btn-primary mb-1">Add Student</a>
-        <a href="{exportUrl}" class="btn btn-success" target="_blank">
+        <a href="{exportUrl}" class="btn btn-success">
             <i class="bi bi-file-excel me-1"></i> Export PDF
         </a>
     </div>

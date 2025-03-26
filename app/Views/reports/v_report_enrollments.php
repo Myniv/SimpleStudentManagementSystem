@@ -9,7 +9,7 @@
                     <input type="text" class="form-control" id="search" name="search"
                         placeholder="Input Student Id or Student Name" value="<?= $search ?? '' ?>">
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary me-2">Lihat Laporan</button>
+                        <button type="submit" class="btn btn-primary me-2">Search</button>
                     </div>
                     <a href="<?= site_url('enrollments/report') ?>" class="btn btn-secondary">Reset</a>
                 </div>
@@ -18,7 +18,7 @@
                 <a href="<?= base_url('enrollments/report/excel') . '?' . http_build_query([
                     'search' => $search,
                 ]) ?>" class="btn btn-success" target="_blank">
-                    <i class="bi bi-file-excel me-1"></i> Export Excel
+                    <i class="bi bi-file-excel me-1"></i> Generate Excel
                 </a>
             </div>
         </div>

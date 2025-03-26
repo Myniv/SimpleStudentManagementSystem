@@ -32,7 +32,7 @@
                     'study_program' => $study_program_selected,
                     'entry_year' => $entry_year_selected
                 ]) ?>" class="btn btn-success" target="_blank">
-                    <i class="bi bi-file-excel me-1"></i> Export Pdf
+                    <i class="bi bi-file-excel me-1"></i> Generate PDF
                 </a>
                 <a href="<?= base_url('admin/student/report') ?>" class="btn btn-secondary ml-2">
                     Reset

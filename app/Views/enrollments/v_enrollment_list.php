@@ -9,9 +9,7 @@
             <a class="btn btn-primary mb-2" href="/enrollments/create">Add Enrollment</a>
         <?php endif; ?>
         <?php if (in_groups('lecturer')): ?>
-            <a href="<?= base_url('/enrollments/report') . '?' . http_build_query([
-                'student_id' => $params->student_id,
-            ]) ?>" class="btn btn-success" target="_blank">
+            <a href="<?= base_url('/enrollments/report') ?>" class="btn btn-success">
                 <i class="bi bi-file-excel me-1"></i> Export PDF
             </a>
         <?php endif; ?>
