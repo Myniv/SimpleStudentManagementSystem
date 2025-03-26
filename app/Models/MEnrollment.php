@@ -154,13 +154,24 @@ class MEnrollment extends Model
         return $result;
     }
 
-    public function getEnrollmentBasedStudent($id)
+    public function getEnrollmentBasedStudent($search)
     {
-        return $this->select('enrollments.id,enrollments.semester as enrollment_semester, enrollments.student_id as student_id, students.study_program as study_program, students.name AS student_name,courses.code as course_code, courses.name AS course_name, courses.credits as credits, enrollments.academic_year as academic_year, enrollments.semester as current_semester, enrollments.status as status')
-            ->join('students', 'students.id = enrollments.student_id', 'left')
-            ->join('courses', 'courses.id = enrollments.course_id', 'left')
-            ->where('enrollments.student_id', $id)
-            ->findAll();
+        $this
+            ->select('enrollments.*, students.name AS student_name,students.study_program as study_program,students.current_semester as current_semester, courses.name AS course_name, 
+            courses.code AS course_code, courses.credits, student_grades.grade_letter AS grade_letter')
+            ->join('students', 'students.id = enrollments.student_id')
+            ->join('courses', 'courses.id = enrollments.course_id')
+            ->join('student_grades', 'student_grades.enrollment_id = enrollments.id', 'left');
+        if (!empty($search)) {
+            $this->groupStart()
+                ->like('students.name', $search, 'both', null, true);
+
+            if (is_numeric($search)) {
+                $this->orWhere('CAST (enrollments.student_id AS TEXT) LIKE', "%$search%");
+            }
+            $this->groupEnd();
+        }
+        return $this->orderBy('enrollments.student_id', 'asc')->findAll();
     }
 
     public function getAllEnrollment()

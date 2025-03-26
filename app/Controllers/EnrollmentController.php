@@ -199,15 +199,19 @@ class EnrollmentController extends BaseController
         return redirect()->to('/enrollments');
     }
 
+    public function getViewReportStudentExcel(){
+        $search = $this->request->getGet("search");
+        $enrollments = $this->enrollmentModel->getEnrollmentBasedStudent($search);
+
+        $data['enrollments'] = $enrollments;
+        $data['search'] = $search;
+        return view('reports/v_report_enrollments', $data);
+    }
+
     public function reportStudentExcel()
     {
-        $student_id = $this->request->getGet("student_id");
-        if (!empty($student_id)) {
-            $enrollments = $this->enrollmentModel->getEnrollmentBasedStudent($student_id);
-            $name = $this->studentModel->select('name')->find($student_id)->name;
-        } else {
-            $enrollments = $this->enrollmentModel->getAllEnrollment();
-        }
+        $search = $this->request->getGet("search");
+        $enrollments = $this->enrollmentModel->getEnrollmentBasedStudent($search);
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -219,8 +223,8 @@ class EnrollmentController extends BaseController
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         $sheet->setCellValue('A3', 'Filter');
-        $sheet->setCellValue('B3', 'Student ID :' . ($student_id ?? 'Semua'));
-        $sheet->setCellValue('D3', 'Nama:' . ($name ?? 'Semua'));
+        // $sheet->setCellValue('B3', 'Student ID :' . ($student_id ?? 'Semua'));
+        // $sheet->setCellValue('D3', 'Nama:' . ($name ?? 'Semua'));
         $sheet->getStyle('A3:D3')->getFont()->setBold(true);
 
         $headers = [
