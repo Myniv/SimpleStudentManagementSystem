@@ -536,7 +536,10 @@ class StudentController extends BaseController
         $pdf->SetTitle('Laporan Mahasiswa');
         $pdf->SetSubject('Laporan Data Mahasiswa');
 
-        $pdf->SetHeaderData('', 0, 'UNIVERSITAS XYZ', '', [0, 0, 0], [0, 64, 128]);
+        //To set the image in pdf, 
+        //set this : define ('K_PATH_IMAGES', FCPATH. '/');
+        //in this path : vendor/tecnickcom/tcpdf/config/tcpdf_config:
+        $pdf->SetHeaderData('iconOrang.png', 10, 'UNIVERSITAS XYZ', '', [0, 0, 0], [0, 64, 128]);
         $pdf->setFooterData([0, 64, 0], [0, 64, 128]);
 
         $pdf->setHeaderFont(['helvetica', '', 12]);
@@ -557,8 +560,8 @@ class StudentController extends BaseController
 
     public function generatePdfHtmlContent($pdf, $students, $studyProgram, $entryYear)
     {
-        $image_file = K_PATH_IMAGES . 'iconOrang.png';
-        $pdf->Image($image_file, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // $image_file = K_PATH_IMAGES . 'iconOrang.png';
+        // $pdf->Image($image_file, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
         $title = 'LAPORAN DATA MAHASISWA';
 
